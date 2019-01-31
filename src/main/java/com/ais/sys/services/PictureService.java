@@ -42,7 +42,7 @@ public class PictureService {
 	public Picture getInfo(Picture picture) {
 		Picture pictureModel = pictureMapper.selectByPrimaryKey(picture.getId());
 		if(pictureModel != null) {
-			setHost(pictureModel);
+			setMainPicture(pictureModel);
 		}
 
 		return pictureModel;
@@ -59,12 +59,22 @@ public class PictureService {
 	public void setMainPicturePath(List<Picture> picList) {
 		if(picList != null) {
 			for(Picture item: picList) {
-				setHost(item);
-				String subPath = item.getPicSubMinPath();
-				if(subPath != null) {
-					String[] paths = subPath.split(",");
-					if(paths != null && paths.length > 0) {
-						item.setMainPicture(paths[0]);
+				setMainPicture(item);
+			}
+		}
+	}
+	
+	public void setMainPicture(Picture picture) {
+		setHost(picture);
+		String subPath = picture.getPicSubMinPath();
+		if(subPath != null) {
+			String[] paths = subPath.split(",");
+			if(paths != null && paths.length > 0) {
+				picture.setMainPicture(paths[0]);
+				if(paths.length > 1) {
+					picture.setMiddlePicture(paths[1]);
+					if(paths.length > 2) {
+						picture.setLargePicture(paths[2]);
 					}
 				}
 			}

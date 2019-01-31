@@ -216,7 +216,10 @@ angular.module('psspAdminApp').controller('PicManageCtrl',
 	       $scope.showPicture = function(mouseEvent, src) {
 	    	   $timeout(function() {
 	    		   var element = getCrossBrowserElement(mouseEvent);
-		    	   $scope.floatImage.src = mouseEvent.target.getAttribute("src");
+		    	   $scope.floatImage.src = mouseEvent.target.getAttribute("look");
+		    	   if(!$scope.floatImage.src) {
+		    		   $scope.floatImage.src = mouseEvent.target.parentElement.getAttribute("look");
+		    	   }
 		    	   $scope.floatImage.left = (element.x + 5) + "px";
 		    	   $scope.floatImage.top = (element.y + 5) + "px";
 		    	   $scope.floatImage.show = true;

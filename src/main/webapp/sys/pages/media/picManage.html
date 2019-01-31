@@ -58,11 +58,15 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="row in tableData" ng-dblclick="select1(row)" ng-click="select(row)">
-									<td row-select="row"></td>
-									<td><img height="30px" alt="" src="{{row.protocol}}{{row.host}}/{{row.mainPicture}}"  ng-mouseenter="showPicture($event)"
+								<tr ng-repeat="row in tableData" ng-dblclick="select1(row)" ng-click="select(row)"
+									look="{{row.protocol}}{{row.host}}/{{row.mainPicture}}"  ng-mouseenter="showPicture($event)"
 									ng-mouseleave="hidePicture($event)"
-									ng-mousemove="movePicture($event)"></td>
+									ng-mousemove="movePicture($event)">
+									
+									<td row-select="row"></td>
+									<td>
+										<img height="30px" alt="" src="{{row.protocol}}{{row.host}}/{{row.mainPicture}}" >
+									</td>
 									<td>{{row.picName}}</td>
 									<td>{{row.picSize}}</td>
 									<td>{{row.width}}</td>

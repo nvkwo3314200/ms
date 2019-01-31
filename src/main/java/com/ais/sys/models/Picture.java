@@ -12,6 +12,10 @@ public class Picture extends BaseModel{
     
     private String mainPicture;
     
+    private String middlePicture;
+    
+    private String largePicture;
+    
     private String picName;
 
     private String picSubMinPath;
@@ -178,6 +182,22 @@ public class Picture extends BaseModel{
 
 	public void setProtocol(String protocol) {
 		this.protocol = protocol;
+	}
+
+	public String getMiddlePicture() {
+		return middlePicture;
+	}
+
+	public String getLargePicture() {
+		return largePicture;
+	}
+
+	public void setMiddlePicture(String middlePicture) {
+		this.middlePicture = middlePicture;
+	}
+
+	public void setLargePicture(String largePicture) {
+		this.largePicture = largePicture;
 	}
     
 }

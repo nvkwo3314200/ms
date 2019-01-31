@@ -27,6 +27,7 @@ angular
 							}).success(function(data) {
 								$scope.state = $stateParams.state;
 								$scope.picModel = data.returnData;
+								console.log($scope.picModel);
 								alertService.cleanAlert();
 							});
 							
