@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-contex.xsd">
+
+	<!-- 1 -->
+	<security:global-method-security secured-annotations="enabled" pre-post-annotations="enabled">
+		<security:expression-handler ref="expressionHandler" />
+	</security:global-method-security>
+
+	<bean id="expressionHandler"
+		class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+		<property name="permissionEvaluator" ref="permissionEvaluator" />
+	</bean>
+
+	<bean id="permissionEvaluator" class="com.ais.sys.security.DefaultAclPermissionEvaluator">
+		<constructor-arg ref="aclService" />
+	</bean>
+
+	<security:http auto-config="true"
+		realm="Welcome to A.S. Watson Supplier Portal Web Application">
+		<security:http-basic />
+		<!-- 1.default-target-url:login success go to url; 2.authentication-failure-handler-ref:login failure; -->
+		<security:form-login
+			default-target-url="/login/success"
+			authentication-failure-handler-ref="loginAuthenticationFailureHandler"
+			login-processing-url="/j_spring_security_check" />
+		
+		<!-- 
+		<security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/> -->
+		
+		<!-- token-validity 30 days -->  
+		<security:remember-me data-source-ref="dataSource" 
+				token-validity-seconds="2592000" 
+				remember-me-parameter="rememberMe"/>
+		
+		<!-- anonymous authentication
+		<security:anonymous username="anonymous" granted-authority="ROLE_ANONYMOUS" />-->
+		
+		<!-- Specifies the access protocol -->
+		<security:intercept-url pattern="/" requires-channel="https"/>
+
+		<!-- 1.invalidate-session:Logout success is destroyed session; 2.logout-url:logout url; 3.logout-success-url:logout go to url; -->
+		<security:logout invalidate-session="true" logout-url="/logout" logout-success-url="/#/login" />
+		<security:csrf disabled="true" />
+	</security:http>
+
+	<!-- check user -->
+	<security:authentication-manager alias="authenticationManager">
+		<security:authentication-provider>
+			<!-- encryption -->
+			<security:password-encoder hash="md5">
+				<security:salt-source user-property="username"/>
+			</security:password-encoder>
+			
+			<!-- Verify the current logged in user -->
+        	<security:jdbc-user-service data-source-ref="dataSource"
+        		users-by-username-query="select USER_CODE username, PWD password, if(ACTIVE_IND ='N', 0,1) enabled from SYS_USER_INFO where DEL_IND = 'Y' and USER_CODE = ?"
+        		authorities-by-username-query="
+        		select USER_CODE username, 'SYSTEMADMIN' authority from SYS_USER_INFO su
+				left join SYS_USER_ROLE sur
+				on su.ID = sur.USER_ID
+				left join SYS_ROLE sr
+				on sur.ROLE_ID = sr.ID
+				where su.DEL_IND = 'Y' and su.USER_CODE = ?"
+        		role-prefix="ROLE_"/>
+      	</security:authentication-provider>
+	</security:authentication-manager>
+
+	<!-- Login failed to deal with -->
+	
+	<bean id="loginAuthenticationFailureHandler" class="com.ais.sys.security.LoginAuthenticationFailureHandler">
+		<property name="defaultFailureUrl" value="/login/failure"/>
+		<aop:scoped-proxy/>
+	</bean>
+	
+</beans>

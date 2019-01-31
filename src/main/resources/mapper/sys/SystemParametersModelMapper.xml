@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ais.sys.daos.SystemParametersDao">
+	<resultMap id="SystemParaResultMap" type="com.ais.sys.models.SystemParametersModel" >
+		<id 	column="ID" 	 		   property="id" 	    	  jdbcType="INTEGER" />
+		<result column="SEGMENT"		   property="segment" 		  jdbcType="VARCHAR" />
+		<result column="CODE" 			   property="code" 			  jdbcType="VARCHAR" />
+		<result column="DISP_SEQ" 		   property="dispSeq"  	  	  jdbcType="INTEGER" />
+		<result column="ATTRIB01" 		   property="attrib01"  	  jdbcType="VARCHAR" />
+		<result column="ATTRIB02" 		   property="attrib02"  	  jdbcType="VARCHAR" />
+		<result column="ATTRIB03" 		   property="attrib03"  	  jdbcType="VARCHAR" />
+		<result column="ATTRIB04" 		   property="attrib04"  	  jdbcType="VARCHAR" />
+		<result column="ATTRIB05" 		   property="attrib05"  	  jdbcType="VARCHAR" />
+		<result column="ATTRIB06" 		   property="attrib06"  	  jdbcType="VARCHAR" />
+		<result column="ATTRIB07" 		   property="attrib07"  	  jdbcType="VARCHAR" />
+		<result column="ATTRIB08" 		   property="attrib08"  	  jdbcType="VARCHAR" />
+		<result column="ATTRIB09" 		   property="attrib09"  	  jdbcType="VARCHAR" />
+		<result column="ATTRIB10" 		   property="attrib10" 		  jdbcType="VARCHAR" />
+		<result column="CREATED_BY" 	   property="createdBy" 	  jdbcType="VARCHAR" />
+    	<result column="CREATED_DATE" 	   property="createdDate"	  jdbcType="DATE" />
+		<result column="LAST_UPDATED_BY"   property="lastUpdatedBy"	  jdbcType="VARCHAR" />
+    	<result column="LAST_UPDATED_DATE" property="lastUpdatedDate" jdbcType="DATE" />
+		<result column="ACTIVE_IND" 	   property="activeInd" 	  jdbcType="VARCHAR" />
+		<result column="DESCRIPTION" 	   property="description" 	  jdbcType="VARCHAR" />
+    	<result column="INACTIVE_DATE"	   property="inactiveDate" 	  jdbcType="DATE" />
+	
+	</resultMap>
+	
+	<sql id="Sys_Para_List" >
+		ID,	SEGMENT, CODE, DISP_SEQ, ATTRIB01, ATTRIB02, ATTRIB03, ATTRIB04, ATTRIB05, ATTRIB06, ATTRIB07, ATTRIB08, ATTRIB09, ATTRIB10, 
+		CREATED_BY, CREATED_DATE, LAST_UPDATED_BY, LAST_UPDATED_DATE, ACTIVE_IND, DESCRIPTION, INACTIVE_DATE
+	</sql>
+    
+	<select id="selectSystemParameters" resultMap="SystemParaResultMap" parameterType="com.ais.sys.models.SystemParametersModel">
+		select 
+		<include refid="Sys_Para_List"></include>
+		from SYS_TABLE_PARM
+		WHERE 1=1
+		<if test="id != null and id != ''">
+			AND ID = #{id,jdbcType=INTEGER}
+     	</if>
+		<if test="segment != null and segment != ''">
+			AND SEGMENT = #{segment,jdbcType=VARCHAR}
+     	</if>
+		<if test="code != null and code != ''">
+			AND CODE = #{code,jdbcType=VARCHAR}
+		</if>
+        order by SEGMENT, DISP_SEQ
+	</select>
+	
+	<update id="updateSystemParameters" parameterType="com.ais.sys.models.SystemParametersModel" >
+		update SYS_TABLE_PARM
+		set SEGMENT 			= #{segment,jdbcType=VARCHAR},
+			CODE				= #{code,jdbcType=VARCHAR},
+			DISP_SEQ			= #{dispSeq,jdbcType=INTEGER},
+			DESCRIPTION			= #{description,jdbcType=VARCHAR},
+			ATTRIB01			= #{attrib01,jdbcType=VARCHAR},
+			ATTRIB02			= #{attrib02,jdbcType=VARCHAR},
+			ATTRIB03			= #{attrib03,jdbcType=VARCHAR},
+			ATTRIB04			= #{attrib04,jdbcType=VARCHAR},
+			ATTRIB05			= #{attrib05,jdbcType=VARCHAR},
+			ATTRIB06			= #{attrib06,jdbcType=VARCHAR},
+			ATTRIB07			= #{attrib07,jdbcType=VARCHAR},
+			ATTRIB08			= #{attrib08,jdbcType=VARCHAR},
+			ATTRIB09			= #{attrib09,jdbcType=VARCHAR},
+			ATTRIB10			= #{attrib10,jdbcType=VARCHAR},
+			ACTIVE_IND			= #{activeInd,jdbcType=VARCHAR},
+			INACTIVE_DATE		= #{inactiveDate,jdbcType=DATE},
+			CREATED_BY			= #{createdBy,jdbcType=VARCHAR},
+			CREATED_DATE		= #{createdDate,jdbcType=DATE},
+			LAST_UPDATED_BY		= #{lastUpdatedBy,jdbcType=VARCHAR},
+			LAST_UPDATED_DATE	= #{lastUpdatedDate,jdbcType=DATE}
+		where ID 				= #{id,jdbcType=INTEGER}
+	</update>
+    
+	<insert id="insertSystemParameters" parameterType="com.ais.sys.models.SystemParametersModel" >
+		insert into SYS_TABLE_PARM (
+			SEGMENT,
+			CODE,
+			DISP_SEQ,
+			DESCRIPTION,
+			ATTRIB01,
+			ATTRIB02,
+			ATTRIB03,
+			ATTRIB04,
+			ATTRIB05,
+			ATTRIB06,
+			ATTRIB07,
+			ATTRIB08,
+			ATTRIB09,
+			ATTRIB10,
+			CREATED_BY,
+			CREATED_DATE,
+			LAST_UPDATED_BY,
+			LAST_UPDATED_DATE,
+			ACTIVE_IND,
+			INACTIVE_DATE)
+		values (
+			#{segment,jdbcType=VARCHAR},
+			#{code,jdbcType=VARCHAR},
+			#{dispSeq,jdbcType=INTEGER},
+			#{description,jdbcType=VARCHAR},
+			#{attrib01,jdbcType=VARCHAR},
+			#{attrib02,jdbcType=VARCHAR},
+			#{attrib03,jdbcType=VARCHAR},
+			#{attrib04,jdbcType=VARCHAR},
+			#{attrib05,jdbcType=VARCHAR},
+			#{attrib06,jdbcType=VARCHAR},
+			#{attrib07,jdbcType=VARCHAR},
+			#{attrib08,jdbcType=VARCHAR},
+			#{attrib09,jdbcType=VARCHAR},
+			#{attrib10,jdbcType=VARCHAR},
+			#{createdBy,jdbcType=VARCHAR},
+			#{createdDate,jdbcType=DATE},
+			#{lastUpdatedBy,jdbcType=VARCHAR},
+			#{lastUpdatedDate,jdbcType=DATE},
+			#{activeInd,jdbcType=VARCHAR},
+			#{inactiveDate,jdbcType=DATE})
+	</insert>
+	
+	<delete id="deleteSystemParameters" parameterType="com.ais.sys.models.SystemParametersModel" >
+		delete from SYS_TABLE_PARM where ID = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<delete id="deleteAll" parameterType="com.ais.sys.models.SystemParametersModel" >
+		delete from SYS_TABLE_PARM where SEGMENT = #{segment,jdbcType=VARCHAR}
+	</delete>
+	
+</mapper>

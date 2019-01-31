@@ -1,0 +1,118 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>{{'sys_menu_user'|translate}}</h1>
+</section>
+
+<!-- Main content -->
+<section class="content" ng-init="init()">
+	<!-- Your Page Content Here -->
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
+				<div class="box-body">
+					<uib-alert ng-repeat="alert in alerts" type="{{alert.type}}"
+						close="alert.close($index)">
+					<div translate="{{alert.msg}}"></div>
+					</uib-alert>
+					<div class="row">
+						<div class="col-md-2">
+							<label class="control-label">{{'sys_label_user_login_id'|translate}}</label>
+						</div>
+						<div class="col-md-3">
+							<input type="text" class="form-control " ng-model="searchUserInfoVo.userCode" placeholder="{{'sys_label_user_login_id'|translate}}"  
+								maxlength="50">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">
+							<label class="control-label">{{'sys_label_user_real_name'|translate}}</label>
+						</div>
+						<div class="col-md-3">
+							<input type="text" class="form-control " ng-model="searchUserInfoVo.userName" placeholder="{{'sys_label_user_real_name'|translate}}"
+								maxlength="100">
+						</div>
+						<div class="col-md-2">
+							<button type="button" class="btn btn-primary" ng-if="powers.search"
+								ng-click="search()">{{'sys_button_search'|translate}}</button>
+							<button type="button" class="btn btn-primary"
+								ng-click="reset()">{{'sys_button_reset'|translate}}</button>
+						</div>
+					</div>
+					<br />
+					<div class="row">
+						<div class="col-md-12" >
+							<button type="button" class="btn btn-primary"   ng-if="powers.create"
+								ng-click="addUser()">{{'sys_button_add'|translate}}</button>
+							<button type="button" class="btn btn-primary" ng-if="powers.update"
+							 	ng-click="editUser()">{{'sys_button_edit'|translate}}</button>
+							<button type="button" class="btn btn-primary" ng-if="powers.delete"
+							 	ng-click="deleteUser()">{{'sys_button_delete'|translate}}</button>
+							<button type="button" class="btn btn-primary" ng-if="powers.audit"
+							 	ng-click="auditTrail()">{{'sys_button_audit'|translate}}</button>
+							 <button type="button" class="btn btn-primary" ng-if="powers.view"
+							 	ng-click="view()">{{'sys_button_view'|translate}}</button>
+					    </div>
+					</div>
+					<br />
+					<div class="table-responsive">
+						<table st-table="tableData" 
+							class="table table-bordered table-hover smart-table">
+							<thead>
+								<tr>
+									<th row-select-all="tableData" selected="selected" ng-click="selectAll(tableData)"></th>
+									<th ng-hide='true'></th>
+									<th >{{'sys_label_user_login_id'|translate}}</th>
+									<th >{{'sys_label_user_real_name'|translate}}</th>
+									<th >{{'sys_label_phone'|translate}}</th>
+									<th >{{'sys_label_email'|translate}}</th>
+									<th >{{'sys_label_active'|translate}}</th>	
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="row in tableData" ng-dblclick="edit2(row)" ng-click="select(row)">
+									<td row-select="row"></td>
+									<td ng-hide='true'>{{row.id}}</td>
+									<td>{{row.userCode}}</td>
+									<td>{{row.userName}}</td>
+									<td>{{row.tel}}</td>
+									<td>{{row.email}}</td>
+									<td>
+										<span ng-show="row.userActiveInd=='Y'">{{'sys_label_y'|translate}}</span>
+										<span ng-show="row.userActiveInd=='N'">{{'sys_label_n'|translate}}</span>
+									</td>
+								</tr>
+							<tfoot>
+								<tr>
+									<td colspan="8" class="text-center">
+										<sys-pagination page="userPage" search-model="searchUserInfoVo" on-search="search(pageModel)"/>
+									</td>
+								</tr>
+							</tfoot>
+							</tbody>
+						</table>
+					</div>
+				
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- confirmModal -->
+<div id="confirmModal" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+ <div class="modal-dialog modal-sm" role="document">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+     <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title" id="myModalLabel">{{'sys_label_hint'|translate}}</h4>
+   </div>
+   <div class="modal-body">{{'sys_msg_confirm'|translate}}</div>
+   <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="deleteUser(true)">{{'sys_button_ok'|translate}}</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">{{'sys_button_return'|translate}}</button>
+   </div>
+  </div>
+ </div>
+</div>
+<!-- /.content -->

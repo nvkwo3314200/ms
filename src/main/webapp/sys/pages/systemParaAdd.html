@@ -1,0 +1,197 @@
+<section class="content-header">
+	<h1>{{'sys_menu_parameter'|translate}} {{'sys_label_add_edit'|translate}}</h1>
+</section>
+
+<section class="content">
+	
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
+				<div class="box-body">
+					<uib-alert ng-repeat="alert in alerts" type="{{alert.type}}"
+						close="alert.close($index)">
+					<div translate="{{alert.msg}}"></div>
+					</uib-alert>
+					<div class="row">
+						<div class="col-md-2 required">
+							<label class="control-label">{{'sys_label_segment'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" ng-model="userVo.segment" ng-disabled="userVo.disFlag  || isSaveCk" 
+								placeholder="{{'sys_label_segment'|translate}}" name="userVo.segment" required maxlength="30" >
+						</div>
+						<div class="col-md-2 required">
+							<label class="control-label">{{'sys_label_code'|translate}}</label>
+						</div>
+						<div class="col-md-4" >
+							<input type="text" class="form-control" ng-model="userVo.code" ng-disabled="userVo.disFlag  || isSaveCk" 
+								placeholder="{{'sys_label_code'|translate}}" onkeyup="this.value=this.value.toUpperCase()" required maxlength="40" >
+						</div>
+					</div>
+					<div class="row" ng-if="ckeckFlag">
+						<div class="col-md-2"></div>
+						<div class="col-md-4">
+							<span style="color:red" ng-show="userVo.segment==null && ckeckFlag">Segment is required.</span>
+						</div>
+						<div class="col-md-2"></div>
+						<div class="col-md-4">
+							<span style="color:red" ng-show="userVo.code==null && ckeckFlag">Code is required.</span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">
+							<label class="control-label">{{'sys_label_descrption'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" ng-model="userVo.description" ng-disabled="state" 
+								placeholder="{{'sys_label_descrption'|translate}}" maxlength="300" >
+						</div>
+						<div class="col-md-2 required">
+							<label class="control-label">{{'sys_label_sequence'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" ng-model="userVo.dispSeq" ng-disabled="state" maxlength="9"
+								placeholder="{{'sys_label_sequence'|translate}}" required 
+								ng-keyup="autoCheck(userVo,'dispSeq')" ng-blur="autoCheck(userVo,'dispSeq')" >
+						</div>
+					</div>
+					<div class="row" ng-if="ckeckFlag">
+						<div class="col-md-2"></div>
+						<div class="col-md-4">
+						</div>
+						<div class="col-md-2"></div>
+						<div class="col-md-4">
+							<span style="color:red" ng-show="userVo.dispSeq==null && ckeckFlag">Seq is required.</span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-2 required">
+							<label class="control-label">{{'sys_label_attrib'|translate}}01</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" ng-model="userVo.attrib01" ng-disabled="state" 
+								placeholder="{{'sys_label_attrib'|translate}}01" maxlength="500" required >
+						</div>
+						<div class="col-md-2">
+							<label class="control-label">{{'sys_label_attrib'|translate}}02</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" ng-model="userVo.attrib02" ng-disabled="state" 
+								placeholder="{{'sys_label_attrib'|translate}}02" maxlength="500" >
+						</div>
+					</div>
+					<div class="row" ng-if="ckeckFlag">
+						<div class="col-md-2"></div>
+						<div class="col-md-4">
+							<span style="color:red" ng-show="userVo.attrib01==null && ckeckFlag">Attrib01 is required.</span>
+						</div>
+						<div class="col-md-2"></div>
+						<div class="col-md-4">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">
+							<label class="control-label">{{'sys_label_attrib'|translate}}03</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" ng-model="userVo.attrib03" ng-disabled="state" 
+								placeholder="{{'sys_label_attrib'|translate}}03" maxlength="500" >
+						</div>
+						<div class="col-md-2">
+							<label class="control-label">{{'sys_label_attrib'|translate}}04</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" ng-model="userVo.attrib04" ng-disabled="state" 
+								placeholder="{{'sys_label_attrib'|translate}}04" maxlength="500" >
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">
+							<label class="control-label">{{'sys_label_attrib'|translate}}05</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" ng-model="userVo.attrib05" ng-disabled="state" 
+								placeholder="{{'sys_label_attrib'|translate}}05" maxlength="500" >
+						</div>
+						<div class="col-md-2">
+							<label class="control-label">{{'sys_label_attrib'|translate}}06</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" ng-model="userVo.attrib06" ng-disabled="state" 
+								placeholder="{{'sys_label_attrib'|translate}}06" maxlength="500" >
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">
+							<label class="control-label">{{'sys_label_attrib'|translate}}07</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" ng-model="userVo.attrib07" ng-disabled="state" 
+								placeholder="{{'sys_label_attrib'|translate}}07" maxlength="500" >
+						</div>
+						<div class="col-md-2">
+							<label class="control-label">{{'sys_label_attrib'|translate}}08</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" ng-model="userVo.attrib08" ng-disabled="state" 
+								placeholder="{{'sys_label_attrib'|translate}}08" maxlength="500" >
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">
+							<label class="control-label">{{'sys_label_attrib'|translate}}09</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" ng-model="userVo.attrib09" ng-disabled="state" 
+								placeholder="{{'sys_label_attrib'|translate}}09" maxlength="500" >
+						</div>
+						<div class="col-md-2">
+							<label class="control-label">{{'sys_label_attrib'|translate}}10</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" ng-model="userVo.attrib10" ng-disabled="state" 
+								placeholder="{{'sys_label_attrib'|translate}}10" maxlength="500" >
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-2 required">
+							<label class="control-label">{{'sys_label_active'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<select class="form-control" id="active" ng-model="userVo.activeInd" ng-click="setdate()" ng-disabled="state" >
+								<option value="Y">{{'sys_label_y'|translate}}</option>
+								<option value="N">{{'sys_label_n'|translate}}</option>
+							</select>
+						</div>
+						<div class="col-md-2">
+							<label class="control-label">{{'sys_label_inactive_date'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<p class="input-group">
+								<input type="text" class="form-control" 
+									uib-datepicker-popup="{{sysDateFormat}}" ng-model="userVo.inactiveDate" 
+									is-open="popup1.opened" datepicker-options="dateOptions" 
+									ng-required="true" close-text="Close" alt-input-formats="altInputFormats" 
+									ng-readonly="userVo.activeInd=='Y'?true:false" />
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-default" ng-click="open1()" 
+										ng-disabled="userVo.activeInd=='Y'?true:false" >
+										<i class="glyphicon glyphicon-calendar"></i>
+									</button>
+								</span>
+							</p>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-md-12 text-right">
+                        	<button type="button" class="btn btn-primary ng-binding" ng-if="!state" ng-click="save()">{{'sys_button_save'|translate}}</button>
+                            <button type="button" class="btn btn-primary" ng-click="cancel()">{{'sys_button_return'|translate}}</button>
+                        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</section>

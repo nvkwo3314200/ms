@@ -1,0 +1,147 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+     <h1 ng-hide="viewStatu">{{'sys_menu_user'|translate}} {{'sys_label_add_edit'|translate}}</h1>
+	 <h1 ng-show="viewStatu">{{'sys_menu_user'|translate}} {{'sys_label_view'|translate}}</h1>
+</section>
+
+
+<!-- Main content -->
+<section class="content" >
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box" >
+                <div class="box-body">
+                    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="alert.close($index)">
+				        <div translate="{{alert.msg}}">
+				        </div>
+				    </uib-alert>
+                    <div class="row">
+					   <div class="col-md-1 required"><label class="control-label">{{'sys_label_user_login_id'|translate}}</label></div>
+					   <div class="col-md-4">
+						  	<input type="text" class="form-control" required maxlength="50" placeholder="{{'sys_label_user_login_id'|translate}}" id="userCode"  ng-model="userInfoVo.userCode"
+						  		 ng-disabled="(userInfoVo.id != null ?true:false) || viewStatu"  >
+					   </div>
+					   <div class="col-md-1"></div>
+					   <div class="col-md-1 required"><label class="control-label">{{'sys_label_user_real_name'|translate}}</label></div>
+					   <div class="col-md-4">
+						  	<input type="text" class="form-control" required maxlength="100" placeholder="{{'sys_label_user_real_name'|translate}}" id="userName"  ng-model="userInfoVo.userName"
+						  	ng-disabled="viewStatu">
+					   </div>
+					</div>
+					<div class="row" ng-if="isSaveCk">
+						<div class="col-md-1"></div>
+						<div class="col-md-4">
+							<span style="color:red"
+								ng-show="userInfoVo.userCode==null && isSaveCk"> Login ID is required. </span>
+						</div>
+						 <div class="col-md-1"></div>
+						<div class="col-md-1"></div>
+						<div class="col-md-4">
+							<span style="color:red"
+								ng-show="userInfoVo.userName==null && isSaveCk"> Name is required. </span>
+						</div>
+					</div>
+					
+					<div class="row"  ng-show="userInfoVo.id !=null">
+					  <div class="col-md-1 required"><label class="control-label">{{'sys_label_password'|translate}}</label></div>
+					  <div class="col-md-4">
+						  	<input type="password" class="form-control" required maxlength="20"  placeholder="******" id="userPwd"  ng-model="userInfoVo.userPwd"
+						  	ng-disabled="viewStatu">
+					  </div>
+					  <div class="col-md-1"></div>
+					  <div class="col-md-1"><label class="control-label">{{'sys_label_user_lock_account'|translate}}</label></div>
+					  <div class="col-md-1">
+					  <select id="accountLock" ng-model="userInfoVo.accountLock" class="form-control" ng-disabled="viewStatu || disable">
+								<option value="Y">{{'sys_label_y'|translate}}</option>
+								<option value="N">{{'sys_label_n'|translate}}</option>
+						</select>					
+					  </div>
+					</div>
+					
+					<div class="row" >
+						<div class="col-md-1"></div>
+						<div class="col-md-4">
+							<span style="color:red" ng-show="userInfoVo.userPwd==null && isSaveCk">
+								Password is required.
+							</span>
+						</div>
+					</div>
+					<div class="row">
+					  <div class="col-md-1"><label class="control-label">{{'sys_label_phone'|translate}}</label></div>
+					  <div class="col-md-4">
+						  	<input type="text" class="form-control" maxlength="20"  placeholder="{{viewStatu ? '' : 'sys_label_phone'|translate}}" id="tel"  ng-model="userInfoVo.tel"
+						  	ng-disabled="viewStatu">
+					  </div>
+					  <div class="col-md-1"></div>
+					  <div class="col-md-1"><label class="control-label">{{'sys_label_email'|translate}}</label></div>
+					  <div class="col-md-4">
+						  	<input type="text" class="form-control" maxlength="50" placeholder="{{viewStatu ? '' : 'sys_label_email'|translate}}" id="email"  ng-model="userInfoVo.email"
+						  	ng-disabled="viewStatu">
+					  </div>
+					</div>
+					
+					<div class="row">
+					  <div class="col-md-1"><label class="control-label">{{'sys_label_active'|translate}}</label></div>
+					  <div class="col-md-4">
+					  <select id="active" ng-model="userInfoVo.userActiveInd" 
+					  ng-change="setdate()" class="form-control"
+					  	ng-disabled="viewStatu || disable">
+								<option value="Y">{{'sys_label_y'|translate}}</option>
+								<option value="N">{{'sys_label_n'|translate}}</option>
+						</select>					
+					  </div>
+					  <div class="col-md-1"></div>
+					  <div class="col-md-1"><label class="control-label">{{'sys_label_inactive_date'|translate}}</label></div>
+					  <div class="col-md-4">
+							<p class="input-group">
+								<input type="text" class="form-control"
+									uib-datepicker-popup="{{sysDateFormat}}" ng-model="userInfoVo.userActiveDate"
+									is-open="popup1.opened" datepicker-options="dateOptions"
+									ng-required="true" close-text="Close"
+									alt-input-formats="altInputFormats" 
+									ng-readonly="userInfoVo.userActiveInd=='Y'?true:false" /> <span
+									class="input-group-btn"
+									ng-disabled="viewStatu">
+									<button type="button" class="btn btn-default"
+										ng-click="open1()" ng-disabled="(userInfoVo.userActiveInd=='Y'?true:false) || viewStatu">
+										<i class="glyphicon glyphicon-calendar"></i>
+									</button>
+								</span>
+							</p>
+					  </div>
+					  
+				  </div>
+				  
+				  <div class="row">
+					  <div class="col-md-1"><label class="control-label">SSO Host</label></div>
+					  <div class="col-md-4">
+						  	<input type="text" class="form-control" maxlength="200"  placeholder="{{viewStatu ? '' : 'SSO Host'|translate}}" ng-model="userInfoVo.ssoHost"
+						  	ng-disabled="viewStatu">
+					  </div>
+					  <div class="col-md-1"></div>
+					  <div class="col-md-1"><label class="control-label">SSO Login ID</label></div>
+					  <div class="col-md-4">
+						  	<input type="text" class="form-control" maxlength="200" placeholder="{{viewStatu ? '' : 'SSO Login ID'|translate}}" ng-model="userInfoVo.ssoLoginId"
+						  	ng-disabled="viewStatu">
+					  </div>
+					</div>
+					
+					<div class="row">
+					  <div class="col-md-1"><label class="control-label">SSO Staff ID</label></div>
+					  <div class="col-md-4">
+						  	<input type="text" class="form-control" maxlength="200"  placeholder="{{viewStatu ? '' : 'SSO Staff ID'|translate}}" ng-model="userInfoVo.ssoStaffId"
+						  	ng-disabled="viewStatu">
+					  </div>
+					</div>
+            </div>
+             <div class="row">
+                <div class="col-md-12 text-right">
+                    <button type="button" class="btn btn-primary ng-binding"  ng-click="save()" ng-hide="viewStatu">{{'sys_button_save'|translate}}</button>
+                   </div>
+               </div> 
+        </div>
+    </div>
+</section>
+
+
+

@@ -1,0 +1,77 @@
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>{{'sys_menu_role'|translate}}</h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+	<div class="row">
+	        <div class="col-xs-12">
+	            <div class="box" >
+	                <div class="box-body">
+	
+	                     <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="alert.close($index)">
+					        <div translate="{{alert.msg}}">
+					        </div>
+					    </uib-alert>
+	
+	                    <div class="row">
+						  <div class="col-md-6 required"><label class="control-label">{{'sys_label_role_name'|translate}}</label></div>
+						  <div class="col-md-6">
+							  	<select id="roleCode" class="form-control"  ng-change="roleValueChange()"
+									ng-model="userInfoVo.selectedRoleModel.roleCode" ng-options="roleManager.roleCode as roleManager.roleName for roleManager in roleManagerCodeList">
+								</select>
+						  </div>
+						</div>
+						  
+						<div class="row">
+						  <div class="col-md-6 required"><label class="control-label">{{'sys_label_role_code'|translate}}</label></div>
+						  <div class="col-md-6">
+							  	<input type="text" class="form-control" ng-readonly="true"
+							  		 maxlength="100" id="roleNam"  ng-model="userInfoVo.selectedRoleModel.roleCode">
+						  </div>
+						</div>
+						<div class="row">
+					  		<div class="col-md-6"><label class="control-label">{{'sys_label_active'|translate}}</label></div>
+					  		<div class="col-md-6">
+					  			<select id="active" class="form-control" ng-model="userInfoVo.selectedRoleModel.roleActive" ng-change="setPopActiveDate()">
+									<option value="Y">{{'sys_label_y'|translate}}</option>
+									<option value="N">{{'sys_label_n'|translate}}</option>
+								</select>					
+					  		</div>
+					 </div>
+					 
+					 <div class="row">
+					  <div class="col-md-6"><label class="control-label">{{'sys_label_inactive_date'|translate}}</label></div>
+					  <div class="col-md-6">
+							<p class="input-group">
+								<input type="text" class="form-control"
+									uib-datepicker-popup="{{sysDateFormat}}" ng-model="userInfoVo.selectedRoleModel.inactiveDate"
+									is-open="popupPop.opened" datepicker-options="dateOptionsPop"
+									ng-required="true" close-text="Close"
+									alt-input-formats="altInputFormats" 
+									ng-readonly="userInfoVo.selectedRoleModel.roleActive =='Y'?true:false" /> 
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-default"
+										ng-click="openPop()" ng-disabled="userInfoVo.selectedRoleModel.roleActive == 'Y'?true:false">
+										<i class="glyphicon glyphicon-calendar"></i>
+									</button>
+								</span>
+							</p>
+					  </div>
+					  <div id = "p"></div>
+				  </div>
+
+                    <div class="row">
+                        <div class="col-md-12 text-right">
+                         <button type="button" class="btn btn-primary ng-binding"  ng-click="saveRolePop()">{{'sys_button_save'|translate}}</button>
+                                  <button type="button" class="btn btn-primary" id="cancelRolePop" ng-click="cancelRolePop()">{{'sys_button_return'|translate}}</button>
+                        </div>
+                    </div>
+	                </div>
+	            </div>
+	        </div>
+	  </div>
+</section>

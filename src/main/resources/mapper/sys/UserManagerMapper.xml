@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ais.sys.daos.UserManagerMapper" >
+	<resultMap id="BaseResultMap" type="com.ais.sys.models.UserInfoModel" >
+	    <result column="ID" 				property="id" 				jdbcType="INTEGER" />
+	    <result column="USER_CODE" 			property="userCode" 		jdbcType="VARCHAR" />
+	    <result column="REAL_NAME" 			property="userName" 	    jdbcType="VARCHAR" />
+	    <result column="PWD" 				property="userPwd" 	    	jdbcType="VARCHAR" />
+	    <result column="DEL_IND" 			property="deleteInd" 		jdbcType="VARCHAR" />
+	    <result column="TEL" 				property="tel" 				jdbcType="VARCHAR" />
+	    <result column="EMAIL" 				property="email" 			jdbcType="VARCHAR" />
+	    <result column="ACTIVE_IND" 		property="userActiveInd" 	jdbcType="VARCHAR" />
+	    <result column="INACTIVE_DATE" 		property="userActiveDate" 	jdbcType="DATE" />
+	    <result column="LOGIN_FAIL_TIMES" 	property="loginFailTimes" 	jdbcType="INTEGER" />
+	    <result column="CREATED_BY" 		property="createdBy" 		jdbcType="VARCHAR" />
+	    <result column="CREATED_DATE" 		property="createdDate" 		jdbcType="DATE" />
+	    <result column="LAST_UPDATED_BY" 	property="lastUpdatedBy" 	jdbcType="VARCHAR" />
+	    <result column="LAST_UPDATED_DATE" 	property="lastUpdatedDate" 	jdbcType="DATE" />
+		<result column="PROD_LN"			property="prodName"        	jdbcType="VARCHAR"/>
+		<result column="USER_PLANT"			property="plantCode"		jdbcType="VARCHAR"/>
+		<result column="USER_PROD_LN"		property="prodLn" 			jdbcType="VARCHAR"/>
+		<result column="SSO_HOST"			property="ssoHost" 			jdbcType="VARCHAR"/>
+		<result column="SSO_LOGIN_ID"		property="ssoLoginId" 		jdbcType="VARCHAR"/>
+		<result column="SSO_STAFF_ID"		property="ssoStaffId" 		jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<resultMap id="MenueResultMap" type="com.ais.sys.models.MenuModel" >
+	    <result column="TYPE" 				property="type" 			jdbcType="VARCHAR" />
+	    <result column="FUNC_CODE" 			property="funcCode" 		jdbcType="VARCHAR" />
+	    <result column="FUNC_NAME_EN" 		property="funcNameEN" 	    jdbcType="VARCHAR" />
+	    <result column="FUNC_NAME_ZH_CN" 	property="funcNameCN" 	    jdbcType="VARCHAR" />
+	    <result column="FUNC_NAME_ZH_TW" 	property="funcNameTW" 	    jdbcType="VARCHAR" />
+	    <result column="UI_SREF" 			property="uiSref" 	    	jdbcType="VARCHAR" />
+	    <result column="FUNC_URL" 			property="funcUrl" 	    	jdbcType="VARCHAR" />
+	</resultMap>
+	
+  	<resultMap id="FuncPowerResultMap" type="com.ais.sys.models.PowerModel" >
+	    <result column="FUNC_URL" 		property="url" 			jdbcType="VARCHAR" />
+	    <result column="FUNC_NAME" 		property="funcName" 	jdbcType="VARCHAR" />
+	    <result column="CAN_SELECT" 	property="search" 		jdbcType="VARCHAR" />
+	    <result column="CAN_INSERT" 	property="create" 	    jdbcType="VARCHAR" />
+	    <result column="CAN_UPDATE" 	property="update" 	    jdbcType="VARCHAR" />
+	    <result column="CAN_DELETE" 	property="delete" 	    jdbcType="VARCHAR" />
+	    <result column="CAN_AUDIT" 		property="audit" 	    jdbcType="VARCHAR" />
+	    <result column="CAN_VIEW" 		property="view" 	    jdbcType="VARCHAR" />
+	</resultMap>
+  	
+  	<sql id="user_view_List" >
+    	b.ID, b.USER_CODE, b.REAL_NAME, b.DEL_IND, b.TEL, b.EMAIL, b.ACTIVE_IND, b.INACTIVE_DATE,b.USER_PLANT,b.USER_PROD_LN,b.LOGIN_FAIL_TIMES,
+    	b.SSO_HOST, b.SSO_LOGIN_ID, b.SSO_STAFF_ID, b.CREATED_BY, b.CREATED_DATE, b.LAST_UPDATED_BY, b.LAST_UPDATED_DATE
+  	</sql>
+	
+   	<select id="selectUserList" resultMap="BaseResultMap" parameterType="com.ais.sys.models.UserInfoModel" >
+	    select 
+	    <include refid="user_view_List" />
+	 	from  SYS_USER_INFO b 
+	    where DEL_IND = 'Y'
+	      <if test="id != null" >
+	       	and ID = #{id, jdbcType=INTEGER}
+	      </if>
+	      <if test="userCode != null">
+			and (b.USER_CODE)like concat('%',#{userCode,jdbcType=VARCHAR},'%')
+		  </if>
+	      <if test="userName != null">
+			and (b.REAL_NAME)like concat('%',#{userName,jdbcType=VARCHAR},'%')
+		  </if>
+		order by ID
+  	</select>
+  	
+  	
+  	<select id="search" resultMap="BaseResultMap" parameterType="com.ais.sys.models.UserInfoModel" >
+  		select * from(
+			select t.*, ROWNUM row_num from(
+			    select 
+			    	count(*)over () DATA_TOTAL,
+			    <include refid="user_view_List" />
+			 	from  SYS_USER_INFO b 
+			    where DEL_IND = 'Y'
+			      <if test="id != null" >
+			       	and ID = #{id, jdbcType=INTEGER}
+			      </if>
+			      <if test="userCode != null">
+					and (b.USER_CODE)like  concat('%',#{userCode,jdbcType=VARCHAR},'%')
+				  </if>
+			      <if test="userName != null">
+					and (b.REAL_NAME)like  concat('%',#{userName,jdbcType=VARCHAR},'%')
+				  </if>
+				order by ID
+				) t
+			) temp
+		where temp.row_num between #{startRow, jdbcType=INTEGER} and #{endRow, jdbcType=INTEGER}
+  	</select>
+  	
+  	
+   	<insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id"  parameterType="com.ais.sys.models.UserInfoModel" >
+    insert into SYS_USER_INFO (USER_CODE, REAL_NAME, PWD, TEL, EMAIL, ACTIVE_IND, INACTIVE_DATE, USER_PLANT, USER_PROD_LN, SSO_HOST, SSO_LOGIN_ID, SSO_STAFF_ID, CREATED_BY, CREATED_DATE, LAST_UPDATED_BY, LAST_UPDATED_DATE)
+    values (#{userCode,		jdbcType=VARCHAR}, 
+    		#{userName,		jdbcType=VARCHAR}, 
+		    #{userPwd,		jdbcType=VARCHAR},
+		   <!--  #{deleteInd,	jdbcType=VARCHAR},--> 
+    		#{tel,			jdbcType=VARCHAR}, 
+    		#{email,		jdbcType=VARCHAR},
+    		#{userActiveInd,	jdbcType=VARCHAR},
+		    #{userActiveDate,	jdbcType=DATE},
+		    #{plantCode, 		jdbcType=VARCHAR},
+		    #{prodLn,			jdbcType=VARCHAR},
+		    #{ssoHost,			jdbcType=VARCHAR},
+		    #{ssoLoginId, 		jdbcType=VARCHAR},
+		    #{ssoStaffId,		jdbcType=VARCHAR},
+		    #{createdBy,		jdbcType=VARCHAR},
+		    #{createdDate,		jdbcType=DATE}, 
+    		#{lastUpdatedBy,	jdbcType=VARCHAR}, 
+		    #{lastUpdatedDate,	jdbcType=DATE})
+  	</insert>
+  	
+  	
+  	<update id="update" parameterType="com.ais.sys.models.UserInfoModel" >
+    	update SYS_USER_INFO
+    	<set>
+	      	<if test="userName != null" >
+	        	REAL_NAME = #{userName,		jdbcType=VARCHAR}, 
+	      	</if>
+	      	<if test="userPwd != null" >
+	        	PWD = #{userPwd,		jdbcType=VARCHAR},
+	      	</if>
+	       	<if test="deleteInd != null" >
+	        	DEL_IND = #{deleteInd,	jdbcType=VARCHAR}, 
+	      	</if>
+	        	TEL = #{tel,			jdbcType=VARCHAR}, 
+	        	EMAIL = #{email,		jdbcType=VARCHAR},
+	      	<if test="userActiveInd != null" >
+	        	ACTIVE_IND =#{userActiveInd,	jdbcType=VARCHAR}, 
+	      	</if>
+	        	INACTIVE_DATE = #{userActiveDate,	jdbcType=DATE}, 
+	       	<if test="plantCode != null">
+	        	USER_PLANT=#{plantCode, 		jdbcType=VARCHAR},
+	       	</if>
+	       	<if test="prodLn !=null">
+	       		USER_PROD_LN=#{prodLn,			jdbcType=VARCHAR},
+	       	</if>
+	       	<if test="loginFailTimes !=null">
+	       		LOGIN_FAIL_TIMES=#{loginFailTimes,			jdbcType=INTEGER},
+	       	</if>
+	       	<if test="ssoHost !=null">
+	       		SSO_HOST=#{ssoHost,			jdbcType=VARCHAR},
+	       	</if>
+	       	<if test="ssoLoginId !=null">
+	       		SSO_LOGIN_ID=#{ssoLoginId,			jdbcType=VARCHAR},
+	       	</if>
+	       	<if test="ssoStaffId !=null">
+	       		SSO_STAFF_ID=#{ssoStaffId,			jdbcType=VARCHAR},
+	       	</if>
+	       	<if test="lastUpdatedBy != null" >
+	        	LAST_UPDATED_BY = #{lastUpdatedBy,	jdbcType=VARCHAR},
+	       	</if>
+	       	<if test="lastUpdatedDate != null" >
+	        	LAST_UPDATED_DATE = #{lastUpdatedDate,	jdbcType=DATE}
+	      	</if>
+    	</set>
+    	where ID = #{id,jdbcType=INTEGER}
+  	</update>
+  
+  	<delete id="deleteUser" parameterType="java.lang.Integer" >
+    	delete from SYS_USER_INFO where ID = #{id,jdbcType=INTEGER}
+  	</delete> 
+  
+  
+  	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    	delete from SYS_USER_ROLE where USER_ID = #{id,	jdbcType=INTEGER}
+  	</delete>
+  
+  	<select id="createExsitUser"  parameterType="com.ais.sys.models.UserInfoModel" resultType="java.lang.Integer">
+	    select ID from SYS_USER_INFO  where  USER_CODE = #{userCode, jdbcType=VARCHAR}
+  	</select>
+  	
+	<!-- login by lh-6-29 -->
+	<select id="selectUser" resultType="com.ais.sys.models.UserInfoModel" parameterType="String" >
+	    select 
+	    	su.ID as id,
+		    su.USER_CODE as userCode,
+		    su.REAL_NAME as userName,
+		    hh.role_code as roleCode, 
+		    su.ACTIVE_IND as userActiveInd, 
+		    su.INACTIVE_DATE as userActiveDate,
+		    su.CREATED_BY as createdBy, 
+		    su.CREATED_DATE as createdDate,
+		    su.LAST_UPDATED_BY as lastUpdatedBy, 
+		    su.LAST_UPDATED_DATE as lastUpdatedDate,
+		    su.PWD as userPwd,
+		    su.EMAIL as email,
+		    su.TEL as tel,
+		    su.LAST_UPDATED_DATE as lastLoginDate,
+		    ifnull(su.LOGIN_FAIL_TIMES, 0) as loginFailTimes,
+		    su.SESSION_LANG as sessionLang,
+		    su.USER_PLANT as plantCode,
+		    su.USER_PROD_LN as prodLn
+	    from SYS_USER_INFO su left join (
+	    	select user_id, GROUP_CONCAT(ROLE_CODE) role_code 
+	    	from SYS_ROLE sr join SYS_USER_ROLE sur 
+			on sr.id = sur.ROLE_ID
+	     	GROUP by sur.user_id 
+	    ) hh
+	    on hh.user_id = su.id
+	    where su.USER_CODE = #{userCode,jdbcType=VARCHAR}
+	    and su.DEL_IND = 'Y'
+  	</select> 
+  	
+  	<!-- login by lh-7-1 -->
+	<select id="selectMenu" resultMap="MenueResultMap" parameterType="String" >
+		select * from (
+		    select 
+		    	sf.TYPE,
+			    sf.FUNC_CODE,
+			    sf.FUNC_NAME_EN,
+			    sf.FUNC_NAME_ZH_CN,
+			    sf.FUNC_NAME_ZH_TW,
+			    sf.UI_SREF,
+			    sf.FUNC_URL,
+			    sf.LEVEL_1_POS, 
+			    sf.LEVEL_2_POS,
+			    (select count(*) from SYS_ROLE_FUNC rf, SYS_FUNC f where sr.ID = rf.ROLE_ID and rf.FUNC_ID = f.ID and rf.ACTIVE = 'Y' and f.TYPE = 'menu' and sf.LEVEL_1_POS = f.LEVEL_1_POS) ACTIVE
+		    from SYS_USER_INFO su, SYS_USER_ROLE sur, SYS_ROLE sr, SYS_ROLE_FUNC srf, SYS_FUNC sf
+		    where su.USER_CODE =  #{userCode,jdbcType=VARCHAR}
+		    and su.ID = sur.USER_ID
+		    and sur.ROLE_ID = srf.ROLE_ID
+		    and srf.FUNC_ID = sf.ID
+		    and srf.ROLE_ID = sr.ID
+        	and srf.ACTIVE = 'Y') temp
+		where temp.ACTIVE > 0
+		group by 
+    		TYPE,
+ 			FUNC_CODE,
+		    FUNC_NAME_EN,
+		    FUNC_NAME_ZH_CN,
+		    FUNC_NAME_ZH_TW,
+		    UI_SREF,
+		    FUNC_URL, 
+		    LEVEL_1_POS, 
+		    LEVEL_2_POS,
+		    ACTIVE
+		 order by 
+		 	LEVEL_1_POS, 
+		 	LEVEL_2_POS
+  	</select>
+  	
+  	<!-- login by lh-9-8 -->
+	<select id="getUserAllFuncPower" resultMap="FuncPowerResultMap" parameterType="String" >
+			
+		select 
+			(CASE temp.SESSION_LANG
+          		WHEN 'en' THEN f.FUNC_NAME_EN
+         		WHEN 'zh_CN' THEN f.FUNC_NAME_ZH_CN
+         		WHEN 'zh_TW' THEN f.FUNC_NAME_ZH_TW
+          	END) FUNC_NAME,
+          	temp.FUNC_URL,
+          	temp.can_insert,
+          	temp.can_delete,
+          	temp.can_update,
+          	temp.can_select,
+          	temp.can_audit,
+          	temp.can_view
+		from SYS_FUNC f,
+			(select 
+				sf.FUNC_URL,
+				sui.SESSION_LANG,
+				max(srf.can_insert) can_insert,
+			    max(srf.can_delete) can_delete,
+			    max(srf.can_update) can_update,
+			    max(srf.can_select) can_select,
+			    max(srf.can_audit) can_audit,
+			    max(srf.can_view) can_view
+			from SYS_USER_INFO sui, SYS_USER_ROLE sur, SYS_ROLE_FUNC srf, SYS_FUNC sf
+			where sui.USER_CODE = #{userCode,jdbcType=VARCHAR}
+			and sui.ID = sur.USER_ID
+			and sur.ROLE_ID = srf.ROLE_ID
+			and srf.FUNC_ID = sf.ID
+	    	and sf.TYPE = 'func'
+			group by sf.FUNC_URL,sui.SESSION_LANG) temp
+		where 
+			f.FUNC_URL = temp.FUNC_URL
+			
+	</select>
+
+  	<!-- login by lh-10-12 -->
+	<insert id="saveUserLoginSuccess" parameterType="com.ais.sys.models.UserInfoModel" >
+  		insert into SYS_USER_LOGINS ( 
+  			USER_CODE, 
+  			OPERATE, 
+  			OPERATE_DATE, 
+  			IP)
+	    values (
+	    	#{userCode,		jdbcType=VARCHAR}, 
+	    	#{operate,		jdbcType=VARCHAR}, 
+	    	now(), 
+	    	#{ip,			jdbcType=VARCHAR})
+	</insert>
+
+  	<!-- login by lh-6-30 -->
+	<update id="updateUserLoginSuccess" parameterType="com.ais.sys.models.UserInfoModel" >
+  		UPDATE SYS_USER_INFO SET 
+       		LOGIN_FAIL_TIMES = 0,
+       		LAST_UPDATED_BY = #{lastUpdatedBy,jdbcType=VARCHAR},
+       		LAST_UPDATED_DATE = #{lastUpdatedDate},
+       		LAST_LOGIN_DATE = #{lastUpdatedDate}
+   		WHERE USER_CODE = #{userCode,jdbcType=VARCHAR}
+	</update>
+  
+	<!-- login by lh-6-30 -->
+	<update id="updateUserLoginFail" parameterType="com.ais.sys.models.UserInfoModel">
+		UPDATE SYS_USER_INFO SET 
+			LOGIN_FAIL_TIMES =(ifnull(LOGIN_FAIL_TIMES, 0) + 1),
+			ACTIVE_IND = (CASE WHEN ifnull(LOGIN_FAIL_TIMES, 0) >= 4 THEN 'N' ELSE ACTIVE_IND END),
+			INACTIVE_DATE = (CASE WHEN ifnull(LOGIN_FAIL_TIMES, 0) >= 4 THEN #{lastUpdatedDate} ELSE INACTIVE_DATE END),
+			LAST_UPDATED_BY = #{lastUpdatedBy,jdbcType=VARCHAR},
+			LAST_UPDATED_DATE = #{lastUpdatedDate}
+		WHERE USER_CODE = #{userCode,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- update the user selected language by Keven in July 20, 2016-->
+	<update id="updateUserLang" parameterType="com.ais.sys.models.UserInfoModel">
+  		UPDATE SYS_USER_INFO SET 
+       		SESSION_LANG = #{sessionLang,jdbcType=VARCHAR},
+       		LAST_UPDATED_DATE = #{lastUpdatedDate}
+   		WHERE ID = #{id,jdbcType=INTEGER}
+	</update>
+  
+</mapper>

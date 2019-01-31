@@ -1,0 +1,298 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+     <h1 ng-hide="viewStatu">{{'sys_menu_user'|translate}} {{'sys_label_add_edit'|translate}}</h1>
+	 <h1 ng-show="viewStatu">{{'sys_menu_user'|translate}} {{'sys_label_view'|translate}}</h1>
+</section>
+
+
+<!-- Main content -->
+<section class="content" >
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box" >
+                <div class="box-body">
+                    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="alert.close($index)">
+				        <div translate="{{alert.msg}}">
+				        </div>
+				    </uib-alert>
+                    <div class="row">
+					   <div class="col-md-1 required"><label class="control-label">{{'sys_label_user_login_id'|translate}}</label></div>
+					   <div class="col-md-4">
+						  	<input type="text" class="form-control" required maxlength="50" placeholder="{{'sys_label_user_login_id'|translate}}" id="userCode"  ng-model="userInfoVo.userCode"
+						  		 ng-disabled="(userInfoVo.id != null ?true:false) || viewStatu"  >
+					   </div>
+					   <div class="col-md-1"></div>
+					   <div class="col-md-1 required"><label class="control-label">{{'sys_label_user_real_name'|translate}}</label></div>
+					   <div class="col-md-4">
+						  	<input type="text" class="form-control" required maxlength="100" placeholder="{{'sys_label_user_real_name'|translate}}" id="userName"  ng-model="userInfoVo.userName"
+						  	ng-disabled="viewStatu">
+					   </div>
+					</div>
+					<div class="row" ng-if="isSaveCk">
+						<div class="col-md-1"></div>
+						<div class="col-md-4">
+							<span style="color:red"
+								ng-show="userInfoVo.userCode==null && isSaveCk"> Login ID is required. </span>
+						</div>
+						 <div class="col-md-1"></div>
+						<div class="col-md-1"></div>
+						<div class="col-md-4">
+							<span style="color:red"
+								ng-show="userInfoVo.userName==null && isSaveCk"> Name is required. </span>
+						</div>
+					</div>
+					<div class="row" ng-show="userInfoVo.id == null">
+					  <div class="col-md-1 required"><label class="control-label">{{'sys_label_password'|translate}}</label></div>
+					  <div class="col-md-4">
+						  	<input type="password" class="form-control" required maxlength="20"  placeholder="{{'sys_label_password'|translate}}" id="userPwd"  ng-model="userInfoVo.userPwd"
+						  	ng-disabled="viewStatu">
+					  </div>
+					   <div class="col-md-1"></div>
+					  <div class="col-md-1"><label class="control-label">{{'sys_label_user_lock_account'|translate}}</label></div>
+					  <div class="col-md-1">
+					  <select id="accountLock" ng-model="userInfoVo.accountLock" class="form-control" ng-disabled="viewStatu">
+								<option value="Y">{{'sys_label_y'|translate}}</option>
+								<option value="N">{{'sys_label_n'|translate}}</option>
+						</select>					
+					  </div>
+					</div>
+					
+					<div class="row"  ng-show="userInfoVo.id !=null">
+					  <div class="col-md-1 required"><label class="control-label">{{'sys_label_password'|translate}}</label></div>
+					  <div class="col-md-4">
+						  	<input type="password" class="form-control" required maxlength="20"  placeholder="******" id="userPwd"  ng-model="userInfoVo.userPwd"
+						  	ng-disabled="viewStatu">
+					  </div>
+					  <div class="col-md-1"></div>
+					  <div class="col-md-1"><label class="control-label">{{'sys_label_user_lock_account'|translate}}</label></div>
+					  <div class="col-md-1">
+					  <select id="accountLock" ng-model="userInfoVo.accountLock" class="form-control" ng-disabled="viewStatu">
+								<option value="Y">{{'sys_label_y'|translate}}</option>
+								<option value="N">{{'sys_label_n'|translate}}</option>
+						</select>					
+					  </div>
+					</div>
+					
+					<div class="row" >
+						<div class="col-md-1"></div>
+						<div class="col-md-4">
+							<span style="color:red" ng-show="userInfoVo.userPwd==null && isSaveCk && userInfoVo.id ==null">
+								Password is required.
+							</span>
+						</div>
+					</div>
+					<div class="row">
+					  <div class="col-md-1"><label class="control-label">{{'sys_label_phone'|translate}}</label></div>
+					  <div class="col-md-4">
+						  	<input type="text" class="form-control" maxlength="20"  placeholder="{{viewStatu ? '' : 'sys_label_phone'|translate}}" id="tel"  ng-model="userInfoVo.tel"
+						  	ng-disabled="viewStatu">
+					  </div>
+					  <div class="col-md-1"></div>
+					  <div class="col-md-1"><label class="control-label">{{'sys_label_email'|translate}}</label></div>
+					  <div class="col-md-4">
+						  	<input type="text" class="form-control" maxlength="50" placeholder="{{viewStatu ? '' : 'sys_label_email'|translate}}" id="email"  ng-model="userInfoVo.email"
+						  	ng-disabled="viewStatu">
+					  </div>
+					</div>
+					
+					<div class="row">
+					  <div class="col-md-1"><label class="control-label">{{'sys_label_active'|translate}}</label></div>
+					  <div class="col-md-4">
+					  <select id="active" ng-model="userInfoVo.userActiveInd" 
+					  ng-change="setdate()" class="form-control"
+					  	ng-disabled="viewStatu">
+								<option value="Y">{{'sys_label_y'|translate}}</option>
+								<option value="N">{{'sys_label_n'|translate}}</option>
+						</select>					
+					  </div>
+					  <div class="col-md-1"></div>
+					  <div class="col-md-1"><label class="control-label">{{'sys_label_inactive_date'|translate}}</label></div>
+					  <div class="col-md-4">
+							<p class="input-group">
+								<input type="text" class="form-control"
+									uib-datepicker-popup="{{sysDateFormat}}" ng-model="userInfoVo.userActiveDate"
+									is-open="popup1.opened" datepicker-options="dateOptions"
+									ng-required="true" close-text="Close"
+									alt-input-formats="altInputFormats" 
+									ng-readonly="userInfoVo.userActiveInd=='Y'?true:false" /> <span
+									class="input-group-btn"
+									ng-disabled="viewStatu">
+									<button type="button" class="btn btn-default"
+										ng-click="open1()" ng-disabled="(userInfoVo.userActiveInd=='Y'?true:false) || viewStatu">
+										<i class="glyphicon glyphicon-calendar"></i>
+									</button>
+								</span>
+							</p>
+					  </div>
+					  
+				  </div>
+				  
+				  <div class="row">
+					  <div class="col-md-1"><label class="control-label">SSO Host</label></div>
+					  <div class="col-md-4">
+						  	<input type="text" class="form-control" maxlength="200"  placeholder="{{viewStatu ? '' : 'SSO Host'|translate}}" ng-model="userInfoVo.ssoHost"
+						  	ng-disabled="viewStatu">
+					  </div>
+					  <div class="col-md-1"></div>
+					  <div class="col-md-1"><label class="control-label">SSO Login ID</label></div>
+					  <div class="col-md-4">
+						  	<input type="text" class="form-control" maxlength="200" placeholder="{{viewStatu ? '' : 'SSO Login ID'|translate}}" ng-model="userInfoVo.ssoLoginId"
+						  	ng-disabled="viewStatu">
+					  </div>
+					</div>
+					
+					<div class="row">
+					  <div class="col-md-1"><label class="control-label">SSO Staff ID</label></div>
+					  <div class="col-md-4">
+						  	<input type="text" class="form-control" maxlength="200"  placeholder="{{viewStatu ? '' : 'SSO Staff ID'|translate}}" ng-model="userInfoVo.ssoStaffId"
+						  	ng-disabled="viewStatu">
+					  </div>
+					</div>
+				  
+				 <!--  
+				   <div class="row">
+				       <div class="col-md-1 required" >
+				           <label class="control-label ">{{'ms_workcntr_plantcode'|translate}}</label>
+				        </div>
+				     
+				        <div class="col-md-5 custom-select-multiple">	        
+						      <select class="form-control" ng-disabled="viewStatu" ng-dblclick="appendTo()"
+						      	ng-model="brandSelect" multiple="multiple"
+						      	ng-options=" (list.plantCode+'-'+(list.plantDesc==null?'':list.plantDesc)) for list in PlantList | orderBy:'plantCode'">  
+						      </select>
+						      <ul>
+								 <li><button ng-click="appendAll()"  ng-disabled="viewStatu">&gt;&gt;</button></li>
+								 <li><button ng-click="appendTo()" ng-disabled="viewStatu">&gt;</button></li>
+								 <li><button ng-click="appendFrom()" ng-disabled="viewStatu">&lt;</button></li>
+								 <li><button ng-click="appendFromAll()" ng-disabled="viewStatu">&lt;&lt;</button></li>
+							  </ul> 
+						      <select ng-model="plant"
+						      	ng-disabled="viewStatu" ng-dblclick="appendFrom()" class="form-control"
+						      	multiple="multiple"
+						      	ng-options="(list.plantCode+'-'+(list.plantDesc==null?'':list.plantDesc)) for list in brandList | orderBy:'plantCode'">  
+						      </select>  
+						 </div>
+						  
+						   <div class="col-md-1" >
+				           <label class="control-label">{{'ms_prodU'|translate}}</label>
+				        </div>
+				     
+				        <div class="col-md-5 custom-select-multiple">	        
+						      <select class="form-control"  ng-disabled="viewStatu" ng-dblclick="prodTo()" ng-model="prodSelect" multiple="multiple" ng-options=" (list.prodLn+'-'+(list.prodName==null?'':list.prodName) ) for list in ProdLnList | orderBy:'prodLn'">  
+						      </select> 
+								<ul>
+									<li><button ng-click="prodAll()" ng-disabled="viewStatu">&gt;&gt;</button></li>
+									<li><button ng-click="prodTo()" ng-disabled="viewStatu">&gt;</button></li>
+									<li><button ng-click="prodFrom()" ng-disabled="viewStatu">&lt;</button></li>
+									<li><button ng-click="prodFromAll()" ng-disabled="viewStatu">&lt;&lt;</button></li>
+								</ul>
+						        <select ng-model="prod"  ng-disabled="viewStatu" ng-dblclick="prodFrom()" class="form-control" multiple="multiple" ng-options="(list.prodLn+'-'+(list.prodName==null?'':list.prodName)) for list in prodList | orderBy:'prodLn'">  
+						        </select>  
+						  </div>			
+					</div> 
+					<div class="row" >
+						<div class="col-md-1"></div>
+						<div class="col-md-4">
+							<span style="color:red" ng-show="brandList.length==0 && isSaveCk">
+									PlantCode is required.
+							</span>
+						</div>
+					</div>
+					-->
+					
+				 <!--  <div class="row">
+						
+						<div class="col-md-2"><label class="control-label">{{'ms_prodU'|translate}}</label></div>
+						<div class="col-md-4">
+					  		<select class="form-control" ng-disabled="viewStatu" ng-model="userInfoVo.prodLn" 
+					  		ng-options="list.prodLn as list.prodName for list in ProdLnList"
+					  		 ></select>
+						</div>
+				  </div> -->
+				  <div class="row">
+					   <div class="col-md-2"><h3>{{'sys_menu_role'|translate}}</h3></div>
+					</div> 
+				  
+				  <div class="row">
+				  	<div class="col-md-12" ng-hide="viewStatu">
+						<button type="button" class="btn btn-primary"
+							ng-click="addUserRole()">{{'sys_button_add'|translate}}</button>
+						<button type="button" class="btn btn-primary"
+						 	ng-click="editUserRole()">{{'sys_button_edit'|translate}}</button>
+						<button type="button" class="btn btn-primary"
+						 	ng-click="deleteUserRole()">{{'sys_button_delete'|translate}}</button>
+						<button type="button" class="btn btn-primary"
+							 ng-click="userRoleAuditTrail()">{{'sys_button_audit'|translate}}</button>
+				    </div>
+				  </div> 
+				  
+				<div class="table-responsive">
+					<table st-table="bufferRole.data" st-safe-src="bufferRole.rowCollection"
+						class="table table-bordered table-hover smart-table">
+						<thead>
+							<tr>
+								<th row-select-all="bufferRole.data" selected="bufferRole.selected" ng-click="bufferRole.selectAll(bufferRole.data)"></th>
+								<th ng-hide='true'></th>
+								<th st-sort="roleName">{{'sys_label_role_name'|translate}}</th>
+								<th st-sort="roleCode">{{'sys_label_role_code'|translate}}</th>
+								<th st-sort="active">{{'sys_label_active'|translate}}</th>
+								<th st-sort="inactiveDate">{{'sys_label_inactive_date'|translate}}</th>							
+							</tr>
+						</thead>
+						<tbody>
+						<tr ng-repeat="row in bufferRole.data" ng-dblclick="editUserRole2(row)" ng-click="bufferRole.select(row)">
+							<td row-select="row" ></td>
+							<td ng-hide='true'>{{row.id}}</td>
+							<td>{{row.roleName}}</td>
+							<td>{{row.roleCode}}</td>
+							<td>
+								<span ng-show="row.roleActive=='Y'">{{'sys_label_y'|translate}}</span>
+								<span ng-show="row.ActiveInd=='N'">{{'sys_label_n'|translate}}</span>
+							</td>
+							<td>{{row.inactiveDate | date:'yyyy-MM-dd'}}</td>
+						</tr>
+						<tfoot>
+								<tr>
+									<td colspan="8" class="text-center">
+										<div st-items-by-page="page" st-pagination=""
+											st-template="./sys/layout/pagination_custom.html">
+											</div>
+												<div ng-show="page  < bufferRole.rowCollection.length " style="margin-left:412px;margin-top:-53px">
+                                   <input style="height:32px" id="pageInput" class="select-page" type="text"  ng-model="page" >&nbsp;{{'sys_label_items_per_page' | translate}}</div>
+									</td>
+									</tr>
+							</tfoot>
+						</tbody>
+					</table>
+				</div> 
+				  
+            </div>
+             <div class="row">
+                <div class="col-md-12 text-right">
+                    <button type="button" class="btn btn-primary ng-binding"  ng-click="save()" ng-hide="viewStatu">{{'sys_button_save'|translate}}</button>
+                             <button type="button" class="btn btn-primary" id="cancel" ng-click="cancel()">{{'sys_button_return'|translate}}</button>
+                   </div>
+               </div> 
+        </div>
+    </div>
+</section>
+<!-- confirmModal -->
+<div id="confirmModal" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+ <div class="modal-dialog modal-sm" role="document">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+     <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title" id="myModalLabel">{{'sys_label_hint'|translate}}</h4>
+   </div>
+   <div class="modal-body">{{'sys_msg_confirm'|translate}}</div>
+   <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="deleteUserRole(true)">{{'sys_button_ok'|translate}}</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">{{'sys_button_return'|translate}}</button>
+   </div>
+  </div>
+ </div>
+</div>
+
+

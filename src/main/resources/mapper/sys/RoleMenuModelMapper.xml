@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ais.sys.daos.RoleMenuModelMapper">
+	<resultMap id="BaseResultMap" type="com.ais.sys.models.RoleMenuModel">
+		<id column="ID" 					property="id" 			jdbcType="INTEGER" />
+		<result column="ROLE_ID" 			property="roleId" 		jdbcType="INTEGER" />
+		<result column="FUNC_ID" 			property="funcId" 		jdbcType="INTEGER" />
+		<result column="CAN_SELECT" 		property="canSelect" 	jdbcType="VARCHAR" />
+		<result column="CAN_INSERT" 		property="canInsert" 	jdbcType="VARCHAR" />
+		<result column="CAN_UPDATE"	 		property="canUpdate" 	jdbcType="VARCHAR" />
+		<result column="CAN_DELETE" 		property="canDelete" 	jdbcType="VARCHAR" />
+		<result column="CAN_AUDIT"			property="canAudit"  	jdbcType="VARCHAR"/>
+		<result column="CAN_VIEW"			property="canView"  	jdbcType="VARCHAR"/>
+		<result column="CREATED_BY" 		property="createdBy" 	jdbcType="VARCHAR" />
+		<result column="CREATED_DATE"		property="createdDate" 	jdbcType="DATE" />
+		<result column="LAST_UPDATED_BY" 	property="lastUpdatedBy"
+			jdbcType="VARCHAR" />
+		<result column="LAST_UPDATED_DATE" 	property="lastUpdatedDate"
+			jdbcType="DATE" />
+		<result column="ACTIVE" 			property="active" 		jdbcType="VARCHAR"/>
+
+		<result column="ROLE_CODE" 			property="roleCode" 	jdbcType="VARCHAR" />
+		<result column="ROLE_NAME" 			property="roleName" 	jdbcType="VARCHAR" />
+		<result column="REMARK" 			property="remark" 		jdbcType="VARCHAR" />
+		<result column="ORDER_ID" 			property="orderId" 		jdbcType="VARCHAR" />
+		<result column="ACTIVE_IND" 		property="activeInd" 	jdbcType="VARCHAR" />
+		<result column="INACTIVE_DATE" 		property="inactiveDate"
+			jdbcType="DATE" />
+		<result column="BUS_UNIT_CODE" 		property="busUnitCode" 	jdbcType="VARCHAR" />
+
+		<result column="TYPE" 				property="type" 		jdbcType="VARCHAR" />
+		<result column="FUNC_NAME_EN" 		property="funcNameEN" 	jdbcType="VARCHAR" />
+		<result column="FUNC_NAME_ZH_CN" 	property="funcNameCN" 	jdbcType="VARCHAR" />
+		<result column="FUNC_NAME_ZH_TW" 	property="funcNameTW" 	jdbcType="VARCHAR" />
+		<result column="LEVEL_1_POS" 		property="lev1" 		jdbcType="VARCHAR" />
+		<result column="LEVEL_2_POS" 		property="lev2" 		jdbcType="VARCHAR" />
+		<result column="FUNC_CODE" 			property="funcCode" 	jdbcType="VARCHAR" />
+		<result column="FUNC_ACTION" 		property="funcAction" 	jdbcType="VARCHAR" />
+		<result column="BASIC_FUNC" 		property="basicFunc" 	jdbcType="VARCHAR" />
+		<result column="LEVEL_3_POS" 		property="lev3" 		jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<select id="selectMenuModelList" resultMap="BaseResultMap"
+		parameterType="com.ais.sys.models.RoleMenuModel">
+		select
+			srf.ID,
+			#{roleId,jdbcType=INTEGER} ROLE_ID,
+			(select
+			ROLE_NAME from SYS_ROLE where ID = #{roleId,jdbcType=INTEGER}) ROLE_NAME,
+			sf.ID FUNC_ID,
+			sf.FUNC_NAME_EN,
+			sf.FUNC_NAME_ZH_CN,
+			sf.FUNC_NAME_ZH_TW,
+			sf.TYPE,
+			ifnull(srf.ACTIVE,'N') ACTIVE,
+			srf.CAN_SELECT,
+			srf.CAN_INSERT,
+			srf.CAN_UPDATE,
+			srf.CAN_DELETE,
+			srf.CAN_AUDIT,
+			srf.CAN_VIEW,
+			srf.CREATED_BY,
+			srf.CREATED_DATE,
+			srf.LAST_UPDATED_BY,
+			srf.LAST_UPDATED_DATE
+		from SYS_FUNC sf left join
+		SYS_ROLE_FUNC srf
+		on srf.ROLE_ID = #{roleId,jdbcType=INTEGER}
+		and sf.id = srf.FUNC_ID
+		order by sf.LEVEL_1_POS, sf.LEVEL_2_POS
+	</select>
+
+	<insert id="creatRolePermission" parameterType="com.ais.sys.models.RoleMenuModel">
+		insert into
+		SYS_ROLE_FUNC (
+		ROLE_ID,
+		FUNC_ID,
+		ACTIVE,
+		CAN_SELECT,
+		CAN_INSERT,
+		CAN_UPDATE,
+		CAN_DELETE,
+		CAN_AUDIT,
+		CAN_VIEW,
+		CREATED_BY,
+		CREATED_DATE,
+		LAST_UPDATED_BY,
+		LAST_UPDATED_DATE
+		)
+		values (
+		#{roleId,jdbcType=INTEGER},
+		#{funcId,jdbcType=INTEGER},
+		#{active,jdbcType=VARCHAR},
+		#{canSelect,jdbcType=VARCHAR},
+		#{canInsert,jdbcType=VARCHAR},
+		#{canUpdate,jdbcType=VARCHAR},
+		#{canDelete,jdbcType=VARCHAR},
+		#{canAudit,jdbcType=VARCHAR},
+		#{canView,jdbcType=VARCHAR},
+		#{createdBy,jdbcType=VARCHAR},
+		now(),
+		#{lastUpdatedBy,jdbcType=VARCHAR},
+		now()
+		)
+	</insert>
+
+	<update id="updateRolePermission" parameterType="com.ais.sys.models.RoleMenuModel">
+		update
+		SYS_ROLE_FUNC set
+		ROLE_ID=#{roleId,jdbcType=INTEGER},
+		FUNC_ID=#{funcId,jdbcType=INTEGER},
+		ACTIVE=#{active,jdbcType=VARCHAR},
+		CAN_SELECT=#{canSelect,jdbcType=VARCHAR},
+		CAN_INSERT=#{canInsert,jdbcType=VARCHAR},
+		CAN_UPDATE=#{canUpdate,jdbcType=VARCHAR},
+		CAN_DELETE=#{canDelete,jdbcType=VARCHAR},
+		CAN_AUDIT=#{canAudit,jdbcType=VARCHAR},		
+		CAN_VIEW =#{canView,jdbcType=VARCHAR},
+		LAST_UPDATED_BY=#{createdBy,jdbcType=VARCHAR},
+		LAST_UPDATED_DATE=now()
+		where id=#{id,jdbcType=INTEGER}
+	</update>
+	
+	<delete id="deleteRoleMenu" parameterType="com.ais.sys.models.RoleMenuModel">
+	delete from SYS_ROLE_FUNC where ROLE_ID=#{roleId,jdbcType=INTEGER}
+	</delete>
+	
+	<delete id="deleteRole" parameterType="com.ais.sys.models.RoleMenuModel">
+	delete from SYS_ROLE_FUNC where FUNC_ID=#{funcId,jdbcType=INTEGER}
+	</delete>
+</mapper>

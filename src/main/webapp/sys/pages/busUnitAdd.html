@@ -1,0 +1,59 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>{{'sys_menu_business'|translate}} {{'sys_label_add_edit'|translate}}</h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box" >
+                <div class="box-body">
+					<uib-alert ng-repeat="alert in alerts" type="{{alert.type}}"
+						close="alert.close($index)">
+					<div translate="{{alert.msg}}"></div>
+					</uib-alert>
+
+					<div class="row">
+					  <div class="col-md-2 required"><label class="control-label">{{'sys_label_business_code'|translate}}</label></div>
+					  <div class="col-md-4">
+						  	<input type="text" class="form-control" required maxlength="80" placeholder="{{'sys_label_business_code'|translate}}" ng-model="busUnitModel.busUnitCode" ng-disabled="busUnitModel.falg || isSaveCk" onkeyup="this.value=this.value.toUpperCase()">
+					  </div>
+					</div>
+					<div class="row" ng-if="isSaveCk">
+						<div class="col-md-2"></div>
+						<div class="col-md-4">
+							<span style="color:red" ng-show="busUnitModel.busUnitCode==null && isSaveCk">
+								Business Unit Code is required.
+							</span>
+						</div>
+						</div>
+					<div class="row">
+					  <div class="col-md-2 required"><label class="control-label">{{'sys_label_business_name'|translate}}</label></div>
+					  <div class="col-md-4">
+						  	<input type="text" class="form-control" ng-disabled="state" required maxlength="200" placeholder="{{'sys_label_business_name'|translate}}" ng-model="busUnitModel.busUnitName">
+					  </div>
+					</div>
+					<div class="row" ng-if="isSaveCk">
+						<div class="col-md-2"></div>
+						<div class="col-md-4">
+							<span style="color:red" ng-show="busUnitModel.busUnitName==null && isSaveCk">
+								Business Unit Name is required.
+							</span>
+						</div>
+						</div>
+            	</div>
+            	
+	            <div class="row">
+					<div class="col-md-12 text-right">
+						<button type="button" class="btn btn-primary" ng-if="!state" ng-click="save()">{{'sys_button_save'|translate}}</button>
+						<button type="button" class="btn btn-primary" ng-click="cancel()">{{'sys_button_return'|translate}}</button>
+					</div>
+				</div>
+        	</div>
+    	</div>
+    </div>
+</section>
+
+
+

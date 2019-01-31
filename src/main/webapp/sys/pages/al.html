@@ -1,0 +1,111 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>用戶登陸信息</h1>
+</section>
+
+<!-- Main content -->
+<section class="content" ng-init="init()">
+	<!-- Your Page Content Here -->
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
+				<div class="box-body">
+					<uib-alert ng-repeat="alert in alerts" type="{{alert.type}}"
+						close="alert.close($index)">
+					<div translate="{{alert.msg}}"></div>
+					</uib-alert>
+					<div class="row">
+						<div class="col-md-2">
+							<label class="control-label">{{'sys_label_role_name'|translate}}</label>
+						</div>
+						<div class="col-md-3">
+							<input type="text" class="form-control "  maxlength="20" placeholder="{{'sys_label_role_name'|translate}}"/>
+						</div>
+						<div class="col-md-2">
+							<button type="button" class="btn btn-primary"
+								ng-click="search()" >{{'sys_button_search'|translate}}</button>
+								<button type="button" class="btn btn-primary"
+								ng-click="resert()">{{'sys_button_reset'| translate}}</button>
+						</div>
+					</div>
+					<br />
+					<div class="table-responsive">
+						<table st-table="tableData" 
+							class="table table-bordered table-hover smart-table">
+							<thead>
+								<tr>
+									<th row-select-all="tableData" selected="selected" ng-click="selectAll(tableData)"></th>
+									<th>ID</th>
+									<th>姓名</th>
+									<th>角色編號</th>
+									 <th>工廠</th>
+									<th>產線</th> 
+									<th>登入/登出</th>
+									<th>時間</th>
+									<th>IP/電腦名</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="row in tableData" ng-dblclick="select1(row)" ng-click="select(row)">
+									<td row-select="row"></td>
+									<td>{{row.loginUserInfoId}}</td>
+									<td>{{row.userName}}</td>
+									<td>{{row.roleCode}}</td>
+									 <td>{{row.plantCode}}</td>
+									<td>{{row.prodLn}}</td>
+									<td>{{row.operate}}</td>
+									<td>{{row.operateDate}}</td>
+									<td>{{row.ip}}</td>
+								</tr>
+							<tfoot>
+								<tr>
+									<td colspan="8" class="text-center">
+										<sys-pagination/>
+									</td>
+								</tr>
+							</tfoot>
+							</tbody>
+						</table>
+					</div>
+				
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<div id="confirmModal" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+ 	<div class="modal-dialog modal-sm" role="document">
+  		<div class="modal-content">
+   			<div class="modal-header">
+    			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+     			<span aria-hidden="true">&times;</span>
+    			</button>
+    			<h4 class="modal-title" id="myModalLabel">{{'sys_label_hint'|translate}}</h4>
+  			</div>
+   			<div class="modal-body">{{'sys_msg_confirm'|translate}}</div>
+	   		<div class="modal-footer">
+	          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="deletes(true)">{{'sys_button_ok'|translate}}</button>
+	          <button type="button" class="btn btn-default" data-dismiss="modal">{{'sys_button_return'|translate}}</button>
+	   		</div>
+  		</div>
+ 	</div>
+</div>
+<!-- confirmModal -->
+<div id="confirmModal" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+ <div class="modal-dialog modal-sm" role="document">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+     <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title" id="myModalLabel">{{'sys_label_hint'|translate}}</h4>
+   </div>
+   <div class="modal-body">{{'sys_msg_confirm'|translate}}</div>
+   <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="deletes(true)">{{'sys_button_ok'|translate}}</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">{{'sys_button_return'|translate}}</button>
+   </div>
+  </div>
+ </div>
+</div>
+<!-- /.content -->

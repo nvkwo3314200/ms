@@ -1,0 +1,8 @@
+<ul class="pagination">
+	<li><a ng-click="selectPage(1)">{{'sys_label_first'| translate}}</a></li>
+	<li><a ng-click="selectPage(page.prePage)">{{'sys_label_previous'| translate}}</a></li>
+	<li><a><input type="text" class="select-page" ng-model="page.pageNum" ng-change="selectPage(page.pageNum)"> {{'sys_label_of'| translate}} {{page.pages}}</a></li>
+	<li><input type="text" class="select-page pagination-rows-input" ng-model="page.pageSize" ng-change="selectRow(page.pageSize)">&nbsp;{{'sys_label_items_per_page'|translate}}</li>
+	<li><a ng-click="selectPage(page.nextPage)">{{'sys_label_next'| translate}}</a></li>
+	<li><a ng-click="selectPage(page.pages)">{{'sys_label_last'| translate}}</a></li>
+</ul>

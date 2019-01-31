@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ais.sys.daos.MenuModelMapper">
+	<resultMap id="BaseResultMap" type="com.ais.sys.models.MenuModel">
+		<id 	column="ID" 				property="id" 				jdbcType="DECIMAL" />
+		<result column="FUNC_NAME_EN" 		property="funcNameEN" 		jdbcType="VARCHAR" />
+		<result column="FUNC_NAME_ZH_CN" 	property="funcNameCN" 		jdbcType="VARCHAR" />
+		<result column="FUNC_NAME_ZH_TW" 	property="funcNameTW" 		jdbcType="VARCHAR" />
+		<result column="FUNC_CODE" 			property="funcCode" 		jdbcType="VARCHAR" />
+		<result column="FUNC_URL" 			property="funcUrl"			jdbcType="VARCHAR"/>
+		<result column="UI_SREF"            property="uiSref" 			jdbcType="VARCHAR"/>
+		<result column="TYPE"				property="type"				jdbcType="VARCHAR"/>
+		<result column="LEVEL_1_POS"  		property="lev1"				jdbcType="INTEGER"/>
+		<result column="LEVEL_2_POS"  		property="lev2"				jdbcType="INTEGER"/>
+		<result column="CREATED_BY" 		property="createdBy" 		jdbcType="VARCHAR" />
+		<result column="CREATED_DATE" 		property="createdDate" 		jdbcType="DATE" />
+		<result column="LAST_UPDATED_BY" 	property="lastUpdatedBy" 	jdbcType="VARCHAR" />
+		<result column="LAST_UPDATED_DATE" 	property="lastUpdatedDate" 	jdbcType="DATE" />
+		<result column="OTHER" 				property="other" 			jdbcType="VARCHAR" />
+	
+	</resultMap>
+	
+	<sql id="Menu_List">
+		ID,
+		FUNC_NAME_EN,
+		FUNC_NAME_ZH_CN,
+		FUNC_NAME_ZH_TW, 
+		FUNC_CODE,
+		FUNC_URL,
+		UI_SREF,
+		TYPE,
+		LEVEL_1_POS,
+		LEVEL_2_POS,
+		CREATED_BY, 
+		CREATED_DATE, 
+		LAST_UPDATED_BY, 
+		LAST_UPDATED_DATE,
+		(select SESSION_LANG from SYS_USER_INFO where USER_CODE = #{other,jdbcType=VARCHAR}) OTHER
+	</sql>
+	
+	<select id="searchMenu" resultMap="BaseResultMap" parameterType="com.ais.sys.models.MenuModel">
+				select 
+					<include refid="Menu_List" />
+					from SYS_FUNC
+					<where>
+					<if test="id != null">
+						and ID = #{id,jdbcType=DECIMAL}
+					</if>
+					<if test="lev1 != null" >
+						and LEVEL_1_POS =#{lev1,jdbcType=INTEGER}
+					</if>
+					<if test="lev2 != null" >
+						and LEVEL_2_POS =#{lev2,jdbcType=INTEGER}
+					</if>
+					</where>
+					order by LEVEL_1_POS,LEVEL_2_POS
+	</select>
+	
+	<select id="search" resultMap="BaseResultMap" parameterType="com.ais.sys.models.MenuModel">
+				select 
+					<include refid="Menu_List" />
+					from SYS_FUNC
+					<where>
+					<if test="id != null">
+						and ID = #{id,jdbcType=DECIMAL}
+					</if>
+					<if test="lev1 != null" >
+						and LEVEL_1_POS =#{lev1,jdbcType=INTEGER}
+					</if>
+					<if test="lev2 != null" >
+						and LEVEL_2_POS =#{lev2,jdbcType=INTEGER}
+					</if>
+					</where>
+					order by LEVEL_1_POS,LEVEL_2_POS
+	</select>
+
+	<insert id="insert" parameterType="com.ais.sys.models.MenuModel">
+		insert into SYS_FUNC(
+			FUNC_NAME_EN,
+			FUNC_NAME_ZH_CN,
+			FUNC_NAME_ZH_TW,
+			FUNC_CODE,
+			UI_SREF,
+			FUNC_URL,
+			TYPE,
+			LEVEL_1_POS,
+			LEVEL_2_POS,
+			CREATED_BY,
+			CREATED_DATE,
+			LAST_UPDATED_BY,
+			LAST_UPDATED_DATE)
+		values (
+			#{funcNameEN,jdbcType=VARCHAR},
+			#{funcNameCN,jdbcType=VARCHAR},
+			#{funcNameTW,jdbcType=VARCHAR},
+			#{funcCode,jdbcType=VARCHAR},
+			#{uiSref,jdbcType=VARCHAR},
+			#{funcUrl,jdbcType=VARCHAR},
+			#{type,jdbcType=VARCHAR},
+			#{lev1,jdbcType=INTEGER},
+			#{lev2,jdbcType=INTEGER},
+			#{lastUpdatedBy,jdbcType=VARCHAR},
+			now(),
+			#{lastUpdatedBy,jdbcType=VARCHAR},
+			now())
+	</insert>
+
+	<update id="update" parameterType="com.ais.sys.models.MenuModel">
+		update SYS_FUNC
+		set FUNC_NAME_EN=#{funcNameEN,jdbcType=VARCHAR},
+			FUNC_NAME_ZH_CN=#{funcNameCN,jdbcType=VARCHAR},
+			FUNC_NAME_ZH_TW=#{funcNameTW,jdbcType=VARCHAR},
+			FUNC_CODE = #{funcCode,jdbcType=VARCHAR},
+			TYPE=#{type,jdbcType=VARCHAR},
+			FUNC_URL=#{funcUrl,jdbcType=VARCHAR},
+			LEVEL_1_POS=#{lev1,jdbcType=INTEGER},
+			LEVEL_2_POS=#{lev2,jdbcType=INTEGER},
+			UI_SREF=#{uiSref,jdbcType=VARCHAR},
+			LAST_UPDATED_BY = #{lastUpdatedBy,jdbcType=VARCHAR},
+			LAST_UPDATED_DATE = now()
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+
+	<delete id="delete" parameterType="com.ais.sys.models.MenuModel">
+		delete from SYS_FUNC where ID = #{id,jdbcType=DECIMAL}
+	</delete>
+	
+	<select id="getMenuname" parameterType="com.ais.sys.models.MenuModel" resultMap="BaseResultMap">
+		select 
+			FUNC_NAME_EN,
+			FUNC_NAME_ZH_CN,
+			FUNC_NAME_ZH_TW,
+			LEVEL_1_POS,
+			LEVEL_2_POS,
+			(select SESSION_LANG from SYS_USER_INFO where USER_CODE = #{other,jdbcType=VARCHAR}) OTHER
+		from SYS_FUNC 
+		where TYPE = #{type,jdbcType=VARCHAR}
+		<if test="lev1!=null">
+		and LEVEL_1_POS=#{lev1,jdbcType=INTEGER}
+		</if>
+		order by LEVEL_1_POS,LEVEL_2_POS
+	</select>
+	
+	<select id="selectmenu" resultMap="BaseResultMap">
+		SELECT 
+			ID,
+			FUNC_CODE,
+			FUNC_NAME_EN,
+			FUNC_NAME_ZH_CN,
+			FUNC_NAME_ZH_TW,
+			TYPE,
+			LEVEL_1_POS,
+			LEVEL_2_POS,
+			(select SESSION_LANG from SYS_USER_INFO where USER_CODE = #{other,jdbcType=VARCHAR}) OTHER
+		FROM SYS_FUNC 
+		<where>	
+		<if test="type!=null">
+			and TYPE=#{type,jdbcType=VARCHAR}
+		</if>
+		<if test="lev1!=null">
+			and ID=#{lev1,jdbcType=INTEGER}
+		</if>
+		</where>
+	</select>
+</mapper>

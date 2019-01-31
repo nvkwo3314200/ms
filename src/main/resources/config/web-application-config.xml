@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+		
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+	<!-- 
+	<bean id="checkUserAspect" class="com.ais.ms.aspect.CheckUserAspect" />
+	 -->
+	<context:component-scan base-package="com.ais.**" use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+	</context:component-scan>
+		
+	<mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+        	<bean class="com.ais.sys.servlet.UTF8StringHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="objectMapper">
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                    	<!-- handle date -->
+                       <!--  <property name="dateFormat">
+                            <bean class="java.text.SimpleDateFormat">
+                                <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
+                            </bean>
+                        </property> -->
+                        <!-- delete null property -->
+                        <property name="serializationInclusion">
+                        	<value type="com.fasterxml.jackson.annotation.JsonInclude.Include">NON_NULL</value>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+	
+	<mvc:resources mapping="/bower_components/**"	location="/bower_components/"/>
+	<mvc:resources mapping="/plugins/**"	location="/plugins/"/>
+	<mvc:resources mapping="/dist/**"	location="/dist/"/>
+	<mvc:resources mapping="/i18n/**"	location="/i18n/"/>
+	<mvc:resources mapping="/sys/**"	location="/sys/"/>
+	<mvc:resources mapping="/ms/**"	location="/ms/"/>
+	<mvc:resources mapping="/file/**"	location="/file/"/>
+
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+		<property name="defaultLocale" value="zh_TW" />
+	</bean>
+	
+	<mvc:interceptors>
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+			<property name="paramName" value="lang" />
+		</bean>
+	</mvc:interceptors>
+	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="10000000000" />
+    </bean>
+</beans>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ais.sys.daos.UserLoginInfoMapper">
+<resultMap id="BaseResultMap" type="com.ais.sys.models.UserInfoModel" >
+	<result column="ID" 			property="loginUserInfoId" 			jdbcType="VARCHAR"/>
+	<result column="REAL_NAME"		property="userName" 				jdbcType="VARCHAR"/>
+	<result column="ROLE_CODE"		property="roleCode" 				jdbcType="VARCHAR"/>
+	<result column="USER_PLANT"		property="plantCode" 				jdbcType="VARCHAR"/>
+	<result column="USER_PROD_LN" 	property="prodLn" 					jdbcType="VARCHAR"/>
+	<result column="OPERATE" 		property="operate" 					jdbcType="VARCHAR"/>
+	<result column="OPERATE_DATE" 	property="opDate" 					jdbcType="VARCHAR"/>
+	<result column="IP"				property="ip" 						jdbcType="VARCHAR"/>
+</resultMap>
+	<select id="searchUserLoginInfo" resultMap="BaseResultMap" parameterType="com.ais.sys.models.UserInfoModel">
+		select 
+			sul.ID ,
+			sui.REAL_NAME,
+			hh.role_code,
+			sui.USER_PLANT,
+			sui.USER_PROD_LN,
+			sul.OPERATE,
+			DATE_FORMAT(sul.operate_date,'%Y-%m-%d %H:%i:%s') OPERATE_DATE,
+			sul.IP
+		from 
+		SYS_USER_LOGINS sul, SYS_USER_INFO sui left join (select user_id, GROUP_CONCAT(ROLE_CODE) role_code from SYS_ROLE sr join SYS_USER_ROLE sur 
+			on sr.id = sur.ROLE_ID
+	     GROUP by sur.user_id ) hh
+					on hh.user_id = sui.id
+			where sul.USER_CODE = sui.USER_CODE
+			<if test="loginUserInfoId != null">
+			and sul.ID = #{loginUserInfoId,jdbcType=VARCHAR}
+			</if>
+			<if test="userName != null">
+			and sui.REAL_NAME = #{userName,jdbcType=VARCHAR}
+			</if>
+			<if test="plantCode !=null">
+			AND sui.USER_PLANT like concat('%',#{plantCode,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="prodLn !=null">
+			AND sui.USER_PROD_LN like concat('%',#{prodLn,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="operateDate !=null">
+			and  curdate() = #{operateDate,jdbcType=DATE}
+			</if>
+		order by operate_date DESC
+	</select>
+</mapper>

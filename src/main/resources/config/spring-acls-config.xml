@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean id="ehcache"
+      class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" p:config-location="classpath:config/ehcache.xml" p:shared="true"/>
+
+	<bean id="aclCache" class="org.springframework.security.acls.domain.EhCacheBasedAclCache">
+	    <constructor-arg ref="aclEhCache"/>
+	    <constructor-arg name="permissionGrantingStrategy" ref="permissionGrantingStrategy"/>
+        <constructor-arg name="aclAuthorizationStrategy" ref="aclAuthorizationStrategy"/>
+	</bean>
+	
+    <bean id="permissionGrantingStrategy" class="org.springframework.security.acls.domain.DefaultPermissionGrantingStrategy">
+        <constructor-arg name="auditLogger">
+            <bean class="org.springframework.security.acls.domain.ConsoleAuditLogger"/>
+        </constructor-arg>
+    </bean>	
+	
+    <bean id="aclAuthorizationStrategy" class="org.springframework.security.acls.domain.AclAuthorizationStrategyImpl">
+        <constructor-arg name="auths">
+            <list>
+            	<!-- the authority needed to change ownership -->
+                <ref bean="adminRole"/>
+                <!-- the authority needed to modify auditing details -->
+                <ref bean="adminRole"/>
+                <!-- the authority needed to change other ACL and ACE details -->
+                <ref bean="adminRole"/>
+            </list>
+        </constructor-arg>
+    </bean>	
+	
+	<bean id="aclEhCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+		<property name="cacheManager" ref="ehcache"/>
+	    <property name="cacheName" value="aclCache"/>
+	</bean>
+	
+	<bean id="lookupStrategy" class="org.springframework.security.acls.jdbc.BasicLookupStrategy">
+	    <constructor-arg ref="dataSource"/>
+	    <constructor-arg ref="aclCache"/>
+	    <constructor-arg ref="aclAuthorizationStrategy">
+	    <!--  
+	        <bean class="org.springframework.security.acls.domain.AclAuthorizationStrategyImpl">
+	            <constructor-arg>
+	                <list>
+	                    <ref bean="adminRole"/>
+	                    <ref bean="adminRole"/>
+	                    <ref bean="adminRole"/>
+	                </list>
+	            </constructor-arg>
+	        </bean>
+	    -->    
+	    </constructor-arg>
+	    <constructor-arg>
+	        <bean class="org.springframework.security.acls.domain.ConsoleAuditLogger"/>
+	    </constructor-arg>
+	</bean>
+	<bean id="adminRole" class="org.springframework.security.core.authority.SimpleGrantedAuthority">
+	    <constructor-arg value="ROLE_SYSTEMADMIN"/>
+	</bean>	
+	
+	<bean id="aclService" class="org.springframework.security.acls.jdbc.JdbcMutableAclService">
+	    <constructor-arg ref="dataSource"/>
+	    <constructor-arg ref="lookupStrategy"/>
+	    <constructor-arg ref="aclCache"/>
+	</bean>	
+	
+	<bean id="afterAclRead" class="org.springframework.security.acls.afterinvocation.AclEntryAfterInvocationProvider">
+<!--      <security:custom-after-invocation-provider/> -->	
+	    <constructor-arg ref="aclService"/>
+	    <constructor-arg>
+	        <list>
+	            <util:constant static-field="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION"/>
+	            <util:constant static-field="org.springframework.security.acls.domain.BasePermission.READ"/>
+	        </list>
+	    </constructor-arg>
+	</bean>
+	<bean id="afterAclCollectionRead" class="org.springframework.security.acls.afterinvocation.AclEntryAfterInvocationCollectionFilteringProvider">
+<!-- 	    <security:custom-after-invocation-provider/> -->
+	    <constructor-arg ref="aclService"/>
+	    <constructor-arg>
+	        <list>
+	            <util:constant static-field="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION"/>
+	            <util:constant static-field="org.springframework.security.acls.domain.BasePermission.READ"/>
+	        </list>
+	    </constructor-arg>
+	</bean>	
+</beans>

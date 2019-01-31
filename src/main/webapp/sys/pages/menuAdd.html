@@ -1,0 +1,212 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>{{'sys_menu_function'|translate}} {{state?'ms_order_data_mgt_preview_btn':'sys_label_add_edit'|translate}}</h1>
+</section>
+
+
+<!-- Main content -->
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
+				<div class="box-body">
+					<uib-alert ng-repeat="alert in alerts" type="{{alert.type}}"
+						close="alert.close($index)">
+					<div translate="{{alert.msg}}"></div>
+					</uib-alert>
+
+					<div class="row">
+						<div class="col-md-2 required">
+							<label class="control-label">{{'sys_label_func_code'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" maxlength="20"
+								 placeholder="{{'sys_label_func_code'|translate}}"
+								required
+								ng-model="menuModel.funcCode"
+								onkeyup="this.value=this.value.toUpperCase()"
+								ng-disabled="menuModel.falg">
+						</div>
+					</div>
+					<div class="row" >
+						<div class="col-md-2"></div>
+						<div class="col-md-4">
+							<span style="color:red" ng-show="menuModel.funcCode==null && isSaveCk">
+								Function Code is required.
+							</span>
+						</div>
+						</div>
+					<div class="row" style="margin-top:10">
+						<div class="col-md-2 required">
+							<label class="control-label">{{'sys_label_func_nameEN'|translate}}</label>
+						</div>
+						<div class="col-md-4">						
+							<input type="text" class="form-control" required maxlength="100"
+								ng-disabled="state"
+								 placeholder="{{'sys_label_func_nameEN'|translate}}"
+								ng-model="menuModel.funcNameEN">
+						</div>
+					</div>
+					<div class="row">
+					<div class="col-md-2"></div>
+						<div class="col-md-4">
+							<span style="color:red" ng-show="menuModel.funcNameEN==null && isSaveCk">
+								Function Name(EN) is required.
+							</span>
+						</div>
+					</div>
+					<div class="row" style="margin-top:10" ng-if="false">
+						<div class="col-md-2 required">
+							<label class="control-label">{{'sys_label_func_nameCN'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" 
+								required maxlength="100"
+								ng-disabled="state"
+								placeholder="{{'sys_label_func_name'|translate}}"
+								ng-model="menuModel.funcNameCN">
+						</div>
+					</div>
+					<div class="row" ng-if="false">
+					<div class="col-md-2"></div>
+						<div class="col-md-4">
+							<span style="color:red" ng-show="menuModel.funcNameEN==null && isSaveCk">
+								Function Name(CN) is required.
+							</span>
+						</div>
+					</div>
+					<div class="row" style="margin-top:10">
+						<div class="col-md-2 required">
+							<label class="control-label">{{'sys_label_func_nameTW'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control"
+								 required maxlength="100"
+								ng-disabled="state"
+								placeholder="{{'sys_label_func_name'|translate}}"
+								ng-model="menuModel.funcNameTW">
+						</div>
+					</div>
+					<div class="row">
+					<div class="col-md-2"></div>
+						<div class="col-md-4">
+							<span style="color:red" ng-show="menuModel.funcNameEN==null && isSaveCk">
+								Function Name(TW) is required.
+							</span>
+						</div>
+					</div>
+					<div class="row" style="margin-top:10">
+						<div class="col-md-2">
+							<label class="control-label">{{'sys_label_func_type'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<select class="form-control" id="moduletype" ng-model="menuModel.type"
+								ng-change="menuchange()" ng-disabled="menuModel.falg">
+								<option value="menu">{{'sys_label_menu'|translate}}</option>
+								<option value="func">{{'sys_label_function'|translate}}</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="row" ng-show="menuModel.type=='func'" style="margin-top:10">
+						<div class="col-md-2 required">
+							<label class="control-label">{{'sys_label_menu'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<select id="menu" class="form-control"
+									ng-disabled="state"
+								 	ng-model="menuModel.lev1"
+								ng-options="list.lev1 as list.funcNames  for list in data">
+							</select>
+						</div>
+					</div>
+					<div class="row" ng-show="menuModel.type=='menu'" style="margin-top:10">
+						<div class="col-md-2 required">
+							<label class="control-label">{{'sys_label_level_1'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" maxlength="9"
+								ng-keyup="autoCheck(menuModel,'lev1')" ng-blur="autoCheck(menuModel,'lev1')"
+								placeholder="{{'sys_label_level_1'|translate}}"
+								ng-model="menuModel.lev1">
+						</div>
+					</div>
+					<div class="row" ng-show="menuModel.type=='func'" style="margin-top:10">
+						<div class="col-md-2 required">
+							<label class="control-label">{{'sys_label_level_1'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" maxlength="9"
+								ng-keyup="autoCheck(menuModel,'lev1')" ng-blur="autoCheck(menuModel,'lev1')"
+								placeholder="{{'sys_label_level_1'|translate}}"
+								ng-model="menuModel.lev1"
+								ng-disabled="menuModel.type=='func'">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-2"></div>
+						<div class="col-md-4">
+							<span style="color:red" ng-show="menuModel.lev1==null && isSaveCk">
+								Level 1 Serial Number is required.
+							</span>
+						</div>
+						</div>
+					<div class="row" style="margin-top:10">
+						<div class="col-md-2 required">
+							<label class="control-label">{{'sys_label_level_2'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" maxlength="9"
+								ng-keyup="autoCheck(menuModel,'lev2')" ng-blur="autoCheck(menuModel,'lev2')"
+								placeholder="{{'sys_label_level_2'|translate}}"
+								ng-model="menuModel.lev2"
+								ng-disabled="state"
+								ng-readonly="menuModel.type=='menu'">
+						</div>
+					</div>
+					<div class="row">
+					<div class="col-md-2"></div>
+						<div class="col-md-4">
+							<span style="color:red" ng-show="menuModel.lev2==null && isSaveCk">
+								Level 2 Serial Number is required.
+							</span>
+						</div>
+						</div>
+					<div class="row" style="margin-top:10">
+						<div class="col-md-2 ">
+							<label class="control-label">{{'sys_label_func_ui'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" maxlength="20"
+								 placeholder="{{state?'':'sys_label_func_ui'|translate}}"
+								ng-disabled="state"
+								ng-model="menuModel.uiSref">
+						</div>
+					</div>
+
+					<div class="row" style="margin-top:10">
+						<div class="col-md-2">
+							<label class="control-label">{{'sys_label_func_url'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" maxlength="20"
+								 placeholder="{{state?'':'sys_label_func_url'|translate}}"
+								ng-disabled="state"
+								ng-model="menuModel.funcUrl">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12 text-right">
+						<button type="button" class="btn btn-primary"  ng-if="!state"
+							ng-click="save()">{{'sys_button_save'|translate}}</button>
+						<button type="button" class="btn btn-primary" ng-click="cancel()">{{'sys_button_return'|translate}}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+

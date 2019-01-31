@@ -1,0 +1,104 @@
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+<!-- 注意:此文件请勿改动，谢谢！-by lh 10-17 --> 
+  	
+  	
+  	
+  	
+  	 
+  	 
+  	 
+  	 
+
+
+<!-- <?xml version="1.0" encoding="UTF-8"?> --> 
+<beans xmlns="http://www.springframework.org/schema/beans"  
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+       xmlns:p="http://www.springframework.org/schema/p"  
+       xmlns:context="http://www.springframework.org/schema/context"  
+       xmlns:sec="http://www.springframework.org/schema/security"  
+       xsi:schemaLocation="http://www.springframework.org/schema/beans  
+       http://www.springframework.org/schema/beans/spring-beans-4.2.xsd  
+       http://www.springframework.org/schema/context  
+       http://www.springframework.org/schema/context/spring-context-4.2.xsd  
+       http://www.springframework.org/schema/security  
+       http://www.springframework.org/schema/security/spring-security-4.0.xsd"  
+       default-lazy-init="true">  
+  
+    <!-- 浏览权限设定，根据自己的情况修改 -->  
+    <sec:http auto-config="true" use-expressions="false" disable-url-rewriting="false"  
+              entry-point-ref="casProcessingFilterEntryPoint">  <!-- 指定登陆入口 --><!-- 1 -->
+              
+        <!--<sec:headers disabled="true"/>  -->
+        <!--<sec:csrf disabled="false"/>    -->
+        
+        <!--<sec:logout logout-success-url="/static/html/logout-success.html"/>  -->
+        
+        <sec:custom-filter ref="casAuthenticationFilter" position="CAS_FILTER" /> <!-- 设置Cas Server认证成功后的页面跳转Filter --><!-- 1-2 -->
+        
+        <sec:custom-filter ref="requestSingleLogoutFilter" before="LOGOUT_FILTER" />  
+        <sec:custom-filter ref="singleLogoutFilter" before="CAS_FILTER"/>  
+    </sec:http>  
+    
+    <!-- 登陆入口 -->
+    <bean id="casProcessingFilterEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">  
+                <!-- 单点登录服务器登录URL -->  
+        <property name="loginUrl" value="http://localhost:8080/cas/login"/>  
+          
+        <property name="serviceProperties" ref="serviceProperties"/>  
+    </bean> 
+    
+    <bean id="casAuthenticationFilter" class="org.springframework.security.cas.web.CasAuthenticationFilter">  <!-- 2 -->
+        <property name="authenticationManager" ref="authenticationManager"/>  <!-- 2-3 --> 
+    </bean>   
+    
+    <sec:authentication-manager alias="authenticationManager">  <!-- 3 -->
+        <sec:authentication-provider ref="casAuthenticationProvider"/>  <!-- 3-4 -->
+    </sec:authentication-manager>  
+
+    <bean id="casAuthenticationProvider"  
+          class="org.springframework.security.cas.authentication.CasAuthenticationProvider">  <!-- 4 -->
+        
+        <property name="serviceProperties" ref="serviceProperties"/> 
+        
+		<property name="userDetailsService" ref="userDetailsManager"/>  <!-- 4-5 -->
+        
+        <property name="ticketValidator">  
+            <bean class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">  
+                <constructor-arg index="0" value="http://localhost:8081/cas"/>  
+            </bean>  
+        </property>  
+        <property name="key" value="an_id_for_this_auth_provider_only"/>  
+    </bean>  
+    
+  	<bean id="userDetailsManager" class="com.ais.sys.services.UserDetailsManager" />  <!-- 5 -->
+    
+    <bean id="serviceProperties" class="org.springframework.security.cas.ServiceProperties">  
+         <!--[login/cas]是Spring Security 4.0后修改的地址、跟3.X版本完全不同、请勿修改-->  
+        <property name="service" value="http://localhost:8080/ms/plant/login/cas"/>  
+          
+        <property name="sendRenew" value="false"/>
+    </bean> 
+     
+    <!-- This filter handles a Single Logout Request from the CAS Server -->  
+    <bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter"/>  
+  
+    <!-- This filter redirects to the CAS Server to signal Single Logout should be performed -->  
+    <bean id="requestSingleLogoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">  
+        <constructor-arg value="http://localhost:8081/cas/logout"/>  
+        <constructor-arg>  
+            <bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>  
+        </constructor-arg>  
+        <property name="filterProcessesUrl" value="/logout/cas"/>  
+    </bean>  
+  
+</beans>  

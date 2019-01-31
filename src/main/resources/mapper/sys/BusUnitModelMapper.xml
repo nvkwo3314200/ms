@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ais.sys.daos.BusUnitModelMapper">
+	<resultMap id="BaseResultMap" type="com.ais.sys.models.BusUnitModel">
+		<result column="BUS_UNIT_CODE" 		property="busUnitCode" 		jdbcType="VARCHAR" />
+		<result column="BUS_UNIT_NAME" 		property="busUnitName" 		jdbcType="VARCHAR" />
+		<result column="CREATED_BY" 		property="createdBy" 		jdbcType="VARCHAR" />
+		<result column="CREATED_DATE" 		property="createdDate" 		jdbcType="DATE" />
+		<result column="LAST_UPDATED_BY" 	property="lastUpdatedBy" 	jdbcType="VARCHAR" />
+		<result column="LAST_UPDATED_DATE" 	property="lastUpdatedDate" 	jdbcType="DATE" />
+	</resultMap>
+	
+
+	<select id="insertRun" parameterType="com.ais.sys.models.BusUnitModel"   statementType="STATEMENT">  
+    ${sql} 
+	</select>   
+	<select id="search" resultMap="BaseResultMap" parameterType="com.ais.sys.models.BusUnitModel">
+		select
+			BUS_UNIT_CODE,
+			BUS_UNIT_NAME,
+			CREATED_BY,
+			CREATED_DATE,
+			LAST_UPDATED_BY,
+			LAST_UPDATED_DATE
+		from SYS_BUS_UNIT
+		<where>
+			<if test="busUnitCode != null">
+				and BUS_UNIT_CODE = #{busUnitCode,jdbcType=VARCHAR}
+			</if>
+			<if test="busUnitName !=null">
+				and BUS_UNIT_NAME like '%'||#{busUnitName, jdbcType=VARCHAR}||'%'
+			</if>
+		</where>
+	</select>
+	
+	<select id="select" resultMap="BaseResultMap" parameterType="com.ais.sys.models.BusUnitModel">
+		select
+		BUS_UNIT_CODE,
+		BUS_UNIT_NAME,
+		CREATED_BY,
+		CREATED_DATE,
+		LAST_UPDATED_BY,
+		LAST_UPDATED_DATE
+		from SYS_BUS_UNIT
+		<where>
+			<if test="busUnitCode != null">
+				and BUS_UNIT_CODE = #{busUnitCode,jdbcType=VARCHAR}
+			</if>
+			<if test="busUnitName !=null">
+				and BUS_UNIT_NAME like concat('%',#{busUnitName, jdbcType=VARCHAR},'%')
+			</if>
+		</where>
+		order by BUS_UNIT_CODE
+	</select>
+	
+	<insert id="insert" parameterType="com.ais.sys.models.BusUnitModel">
+		insert into SYS_BUS_UNIT(
+			BUS_UNIT_NAME,
+			BUS_UNIT_CODE,
+			CREATED_BY,
+			CREATED_DATE,
+			LAST_UPDATED_BY,
+			LAST_UPDATED_DATE)
+		values (
+			#{busUnitName,jdbcType=VARCHAR},
+			#{busUnitCode,jdbcType=VARCHAR},
+			#{lastUpdatedBy,jdbcType=VARCHAR},
+			SYSDATE,
+			#{lastUpdatedBy,jdbcType=VARCHAR},
+			SYSDATE)
+	</insert>
+	
+	<update id="update" parameterType="com.ais.sys.models.BusUnitModel">
+		update SYS_BUS_UNIT
+		set BUS_UNIT_NAME = #{busUnitName,jdbcType=VARCHAR},
+			BUS_UNIT_CODE = #{busUnitCode,jdbcType=VARCHAR},
+			LAST_UPDATED_BY = #{lastUpdatedBy,jdbcType=VARCHAR},
+			LAST_UPDATED_DATE = SYSDATE
+		where BUS_UNIT_CODE = #{busUnitCode,jdbcType=VARCHAR}
+	</update>
+
+	<delete id="delete" parameterType="com.ais.sys.models.BusUnitModel">
+		delete from SYS_BUS_UNIT where BUS_UNIT_CODE = #{busUnitCode,jdbcType=VARCHAR}
+	</delete>
+</mapper>

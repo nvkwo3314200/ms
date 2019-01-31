@@ -1,0 +1,9 @@
+<nav ng-if="pages.length >= 2">
+    <ul class="pagination">
+        <li><a ng-click="selectPage(1)">{{'sys_label_first'| translate}}</a>
+        </li><li><a ng-click="selectPage(currentPage - 1)">{{'sys_label_previous'| translate}}</a>
+    </li><li><a><page-select></page-select> {{'sys_label_of'| translate}} {{numPages}}</a>
+    </li><li><a ng-click="selectPage(currentPage + 1)">{{'sys_label_next'| translate}}</a>
+    </li><li><a ng-click="selectPage(numPages)">{{'sys_label_last'| translate}}</a></li>
+    </ul>
+</nav>

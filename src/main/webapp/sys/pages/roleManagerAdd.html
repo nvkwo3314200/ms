@@ -1,0 +1,217 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>{{'sys_menu_role'|translate}}
+		{{state?'ms_order_data_mgt_preview_btn':'sys_label_add_edit'|translate}}</h1>
+</section>
+
+
+<!-- Main content -->
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
+				<div class="box-body">
+					<uib-alert ng-repeat="alert in alerts" type="{{alert.type}}"
+						close="alert.close($index)">
+					<div translate="{{alert.msg}}"></div>
+					</uib-alert>
+					<div class="row">
+						<div class="col-md-2 required">
+							<label class="control-label">{{'sys_label_role_code'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" maxlength="20" required
+								placeholder="{{'sys_label_role_code'|translate}}" id="roleCode"
+								ng-model="roleVo.roleCode"
+								onkeyup="this.value=this.value.toUpperCase()"
+								ng-disabled="roleVo.falg">
+						</div>
+
+						<div class="col-md-2 required">
+							<label class="control-label">{{'sys_label_role_name'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" maxlength="50" required
+								placeholder="{{'sys_label_role_name'|translate}}" id="roleName"
+								ng-disabled="state" ng-model="roleVo.roleName">
+						</div>
+					</div>
+					<div class="row" ng-if="isSaveCk">
+						<div class="col-md-2"></div>
+						<div class="col-md-4">
+							<span style="color:red"
+								ng-show="roleVo.roleCode==null && isSaveCk"> Role Code is
+								required. </span>
+						</div>
+						<div class="col-md-2"></div>
+						<div class="col-md-4">
+							<span style="color:red"
+								ng-show="roleVo.roleName==null && isSaveCk"> Role Name is
+								required. </span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">
+							<label class="control-label">{{'sys_label_remark'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" maxlength="100"
+								placeholder="{{'sys_label_remark'|translate}}"
+								ng-disabled="state" id="roleRemark" ng-model="roleVo.roleRemark">
+						</div>
+						<div class="col-md-2 required">
+							<label class="control-label">{{'sys_label_sequence'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" maxlength="4"
+								ng-disabled="state" required
+								placeholder="{{'sys_label_sequence'|translate}}" id="roleOrder"
+								ng-model="roleVo.roleOrder"
+								ng-keyup="autoCheck(roleVo,'roleOrder')"
+								ng-blur="autoCheck(roleVo,'roleOrder')">
+						</div>
+					</div>
+					<div class="row" ng-if="isSaveCk">
+						<div class="col-md-2"></div>
+						<div class="col-md-4"></div>
+						<div class="col-md-2"></div>
+						<div class="col-md-4">
+							<span style="color:red"
+								ng-show="roleVo.roleOrder==null && isSaveCk"> Seq is
+								required. </span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">
+							<label class="control-label">{{'sys_label_active'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<select id="active" ng-disabled="state" class="form-control"
+								ng-model="roleVo.roleActive" ng-click="setdate()">
+								<option value="Y">{{'sys_label_y'|translate}}</option>
+								<option value="N">{{'sys_label_n'|translate}}</option>
+							</select>
+							<!-- 	<input type="checkbox" ng-model="roleVo.roleActive"
+								ng-true-value="'Y'" ng-false-value="'N'" ng-click="setdate()">
+						 -->
+						</div>
+						<div class="col-md-2">
+							<label class="control-label">{{'sys_label_inactive_date'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<p class="input-group">
+								<input type="text" class="form-control"
+									uib-datepicker-popup="{{sysDateFormat}}" ng-disabled="state"
+									ng-model="roleVo.inactiveDate" is-open="popup1.opened"
+									datepicker-options="dateOptions" close-text="Close"
+									alt-input-formats="altInputFormats"
+									ng-readonly="roleVo.roleActive=='Y'?true:false" /> <span
+									class="input-group-btn">
+									<button type="button" class="btn btn-default"
+										ng-click="open1()"
+										ng-disabled="roleVo.roleActive=='Y'?true:false">
+										<i class="glyphicon glyphicon-calendar"></i>
+									</button>
+								</span>
+							</p>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-2">
+							<label class="control-label">{{'sys_menu_business'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<select id="busUnitCode" class="form-control"
+								ng-model="roleVo.busUnitCode" ng-disabled="state"
+								ng-options="busUnit.busUnitCode as busUnit.busUnitName for busUnit in busUnitList">
+							</select>
+							<!-- <input type="text" class="form-control" maxlength="8"  placeholder="Business Unit" id="busUnitCode"  ng-model="roleVo.busUnitCode"> -->
+						</div>
+					</div>
+					<!-- <div class="row" ng-if="isSaveCk">
+						<div class="col-md-2"></div>
+						<div class="col-md-4">
+							<span style="color:red"
+								ng-show="roleVo.busUnitCode==null && isSaveCk"> Business
+								Unit is required. </span>
+						</div>
+					</div> -->
+				</div>
+				<div class="table-responsive">
+					<table st-table="data" st-safe-src="rowCollection"
+						class="table table-bordered table-hover smart-table">
+						<thead>
+							<tr>
+								<th st-sort="roleName">{{'sys_label_func_name'|translate}}</th>
+								<th st-sort="roletype">{{'sys_label_func_code'|translate}}</th>
+								<th st-sort="activation">{{'sys_label_active'|translate}}</th>
+								<th st-sort="roleCode">{{'sys_label_operation'|translate}}</th>
+							</tr>
+
+						</thead>
+						<tbody>
+							<tr ng-repeat="row in data">
+								<td><span ng-if="roleVo.language == 'en'">{{row.funcNameEN}}</span>
+									<span ng-if="roleVo.language == 'zh_CN'">{{row.funcNameCN}}</span>
+									<span ng-if="roleVo.language == 'zh_TW'">{{row.funcNameTW}}</span>
+								</td>
+								<td><span ng-show="row.type=='menu'">{{'sys_label_menu'|translate}}</span>
+									<span ng-show="row.type=='func'">{{'sys_label_function'|translate}}</span>
+								</td>
+								<td width="85px"><select id="active" ng-model="row.active" class="form-control"
+									ng-disabled="state">
+										<option value="Y">{{'sys_label_y'|translate}}</option>
+										<option value="N">{{'sys_label_n'|translate}}</option>
+								</select></td>
+								<td>
+									<input type="checkbox" ng-disabled="state"
+										ng-model="row.canSelect" ng-true-value="'Y'"
+										ng-false-value="'N'">{{'sys_button_search'|translate}}
+									<input type="checkbox" ng-disabled="state"
+										ng-model="row.canInsert" ng-true-value="'Y'"
+										ng-false-value="'N'">{{'sys_button_add'|translate}} 
+									<input type="checkbox" ng-disabled="state" 
+										ng-model="row.canDelete"ng-true-value="'Y'"
+										ng-false-value="'N'">{{'sys_button_delete'|translate}}
+									<input type="checkbox" ng-disabled="state"
+										ng-model="row.canUpdate" ng-true-value="'Y'"
+										ng-false-value="'N'">{{'sys_button_edit'|translate}}
+									<input type="checkbox" ng-disabled="state" 
+										ng-model="row.canAudit" ng-true-value="'Y'" 
+										ng-false-value="'N'">{{'sys_button_audit'|translate}}
+									<input type="checkbox" ng-disabled="state"
+										ng-model="row.canView" ng-true-value="'Y'" 
+										ng-false-value="'N'">{{'sys_button_view'|translate}}
+								</td>
+							</tr>
+						<tfoot>
+							<tr>
+								<td colspan="10" class="text-center">
+									<div st-items-by-page="page" st-pagination=""
+										st-template="./sys/layout/pagination_custom.html"></div>
+									<div ng-show="page  < rowCollection.length "
+										style="margin-left:412px;margin-top:-53px">
+										<input style="height:32px" id="pageInput" class="select-page"
+											type="text" ng-model="page">&nbsp;{{'sys_label_items_per_page'
+										| translate}}
+									</div>
+								</td>
+							</tr>
+						</tfoot>
+						</tbody>
+					</table>
+				</div>
+				<div class="row">
+					<div class="col-md-12 text-right">
+						<button type="button" ng-if="!state"
+							class="btn btn-primary ng-binding" ng-click="save()">{{'sys_button_save'|translate}}</button>
+						<button type="button" class="btn btn-primary" id="cancel"
+							ng-click="cancel()">{{'sys_button_return'|translate}}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</section>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ais.sys.daos.UserRoleManagerMapper" >
+	<resultMap id="BaseResultMap" type="com.ais.sys.models.RoleModel">
+		<result column="ID" 				property="id" 				jdbcType="INTEGER" />
+		<result column="USER_ID" 			property="userId" 			jdbcType="INTEGER" />
+		<result column="ROLE_ID" 			property="roleId" 			jdbcType="INTEGER" />
+		<result column="ACTIVE_IND" 		property="roleActive" 		jdbcType="VARCHAR" />
+		<result column="INACTIVE_DATE" 		property="inactiveDate" 	jdbcType="DATE" />
+		<result column="CREATED_BY" 		property="createdBy" 		jdbcType="VARCHAR" />
+		<result column="CREATED_DATE" 		property="createdDate" 		jdbcType="DATE" />
+		<result column="LAST_UPDATED_BY" 	property="lastUpdatedBy" 	jdbcType="VARCHAR" />
+		<result column="LAST_UPDATED_DATE" 	property="lastUpdatedDate" 	jdbcType="DATE" />
+	</resultMap>
+	
+		  
+   <select id="userOfRoleId" resultType="java.lang.Integer" >
+	    select SYS_USER_ROLE_ID_SEQ.nextVal  from dual
+   </select>
+  
+   <insert id="insert"  parameterType="com.ais.sys.models.RoleModel" >
+    insert into SYS_USER_ROLE ( USER_ID, ROLE_ID, ACTIVE_IND, INACTIVE_DATE, CREATED_BY, CREATED_DATE, LAST_UPDATED_BY, LAST_UPDATED_DATE)
+    values (#{userId,			jdbcType=INTEGER}, 
+    		#{roleId,			jdbcType=INTEGER}, 
+		    #{roleActive,		jdbcType=VARCHAR},
+    		#{inactiveDate,		jdbcType=DATE}, 
+		    #{createdBy,		jdbcType=VARCHAR},
+		    #{createdDate,		jdbcType=DATE}, 
+    		#{lastUpdatedBy,	jdbcType=VARCHAR}, 
+		    #{lastUpdatedDate,	jdbcType=DATE})
+  	</insert>
+  	
+  	<update id="delete" parameterType="com.ais.sys.models.RoleModel" >
+    	delete from SYS_USER_ROLE where ID = #{id,	jdbcType=INTEGER}
+  	</update>
+  	
+  	<update id="update" parameterType="com.ais.sys.models.RoleModel" >
+    	update SYS_USER_ROLE
+		    <set >
+		      <if test="userId != null" >
+		        USER_ID = #{userId,		jdbcType=INTEGER}, 
+		      </if>
+		      <if test="roleId != null" >
+		        ROLE_ID = #{roleId,		jdbcType=INTEGER},
+		      </if>
+		      <if test="roleActive != null" >
+		        ACTIVE_IND = #{roleActive,	jdbcType=VARCHAR}, 
+		      </if>
+		      	INACTIVE_DATE = #{inactiveDate,	jdbcType=DATE}, 
+		      <if test="lastUpdatedBy != null" >
+		        LAST_UPDATED_BY = #{lastUpdatedBy,	jdbcType=VARCHAR},
+		      </if>
+		      <if test="lastUpdatedDate != null" >
+		        LAST_UPDATED_DATE = #{lastUpdatedDate,	jdbcType=DATE}
+		      </if>
+		    </set>
+    	where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+</mapper>

@@ -1,0 +1,162 @@
+<section class="content-header">
+	<h1>{{'sys_menu_parameter'|translate}}</h1>
+</section>
+<section class="content" ng-init="init()">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
+				<div class="box-body">
+					<uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="alert.close($index)">
+						<div translate="{{alert.msg}}"></div>
+					</uib-alert>
+					<div class="row">
+						<div class="col-md-2">
+							<label class="control-label">{{'sys_label_segment'|translate}}</label>
+						</div>
+						<div class="col-md-3">
+							<select class="form-control" ng-model="searchModel.segment"
+								ng-options="list.segment as list.segment for list in segmentList" >
+								<option></option>
+							</select>
+						</div>
+						<div class="col-md-2">
+							<button type="button" class="btn btn-primary" ng-if="powers.search" 
+								ng-click="search(searchModel)">{{'sys_button_search'|translate}}</button>
+							<button type="button" class="btn btn-primary"
+								ng-click="reset()">{{'sys_button_reset'|translate}}</button>
+						</div>
+					</div>
+					<br />
+					<div class="row">
+						<div class="col-md-12">
+							<button type="button" class="btn btn-primary" ng-click="addUser()" ng-if="powers.create">{{'sys_button_add'|translate}}</button>
+							<button type="button" class="btn btn-primary" ng-click="edit()" ng-if="powers.update">{{'sys_button_edit'|translate}}</button>
+							<button type="button" class="btn btn-primary" ng-click="deletes()" ng-if="powers.delete">{{'sys_button_delete'|translate}}</button>
+							<button type="button" class="btn btn-primary" ng-click="auditTrail()" ng-if="powers.audit">{{'sys_button_audit'|translate}}</button>
+							<button type="button" class="btn btn-primary" ng-click="view()" ng-if="powers.view">{{'sys_button_view'|translate}}</button>
+						</div>
+					</div>
+					<br />
+					<div class="table-responsive" >
+						<table st-table="tableData"
+							class="table table-bordered table-hover smart-table">
+							<thead>
+								<tr>
+									<th row-select-all="tableData" selected="selected" ng-click="selectAll(tableData)"></th>
+									<th>{{'sys_label_segment'|translate}}</th>
+									<th>{{'sys_label_code'|translate}}</th>
+									<th>{{'sys_label_descrption'|translate}}</th>
+									<th>{{'sys_label_sequence'|translate}}</th>
+									<th>{{'sys_label_active'|translate}}</th>
+									<th>{{'sys_label_attrib'|translate}}01</th>
+									<th>{{'sys_label_attrib'|translate}}02</th>
+									<th>{{'sys_label_attrib'|translate}}03</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="row in tableData" ng-dblclick="selectDouble(row)" ng-click="select(row)">
+									<td row-select="row"></td>
+									<td>{{row.segment}}</td>
+									<td>{{row.code}}</td>
+									<td>{{row.description}}</td>
+									<td>{{row.dispSeq}}</td>
+									<td>
+										<span ng-show="row.activeInd=='Y'">{{'sys_label_y'|translate}}</span>
+										<span ng-show="row.activeInd=='N'">{{'sys_label_n'|translate}}</span>
+									</td>
+									<td>{{row.attrib01}}</td>
+									<td>{{row.attrib02}}</td>
+									<td>{{row.attrib03}}</td>
+								</tr>
+							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan="9" class="text-center">
+										<sys-pagination page="paramPage" search_model="searchModel" on_search="search(pageModel)"/>
+									</td>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+					<div class="row">
+						<div class="col-md-2">
+							<button type="button" class="btn btn-primary" ng-click="download()">
+								{{'sys_button_export'|translate}}
+					    	</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-2 required"></div>
+						<div class="col-md-4">
+							<div>
+								<span>{{uploadProgress.status}}</span>
+								<span style="float:right">{{uploadProgress.value | roundPer}}</span>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-2 required">
+							<label class="control-label">{{'sys_text_uploadfile'|translate}}</label>
+						</div>
+						<div class="col-md-4">
+							<div ng-class="{progress: true, 'progress-striped': true}" class="custom-progress">
+								<div ng-class="['progress-bar', 'progress-bar-info']"
+									ng-style="{width: uploadProgress.value*100 +'%'}">
+								</div>
+								<div class="custom-progress-text">{{uploader.queue[0].file.name}}</div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<input type="file" id="stFile" nv-file-select="" uploader="uploader" ng-click="clear()" ng-show="false"/>
+							<button class="btn btn-primary" ng-if="uploader" onclick="javascript:$('#stFile').click()">{{'ms_order_data_mgt_selected_file'|translate}}</button>
+							<button type="button" class="btn btn-primary" ng-if="!uploadProgressFlag"
+							 	ng-click="upload()">{{'sys_button_import'|translate}}</button>
+							<button type="button" class="btn btn-primary" ng-if="uploadProgressFlag" ng-disabled="uploadProgress.value <= 0.05"
+							 	ng-click="upload()">{{'sys_button_cancel'|translate}}</button>
+							<button type="button" class="btn btn-primary" ng-click="templatedownload()">
+								{{'sys_button_export_template'|translate}}
+						    </button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-2 required"></div>
+						<div class="col-md-4">
+							<span style="color:red" ng-show="isSaveCk">
+								Only supports xls or xlsx format file.
+							</span>
+							<span style="color:red" ng-show="isChoice">
+								Please Upload file.
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- confirmModal -->
+<div id="confirmModal" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+ <div class="modal-dialog modal-sm" role="document">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+     <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title" id="myModalLabel">{{'sys_label_hint'|translate}}</h4>
+   </div>
+   <div class="modal-body">{{'sys_msg_confirm'|translate}}</div>
+   <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="deletes(true)">{{'sys_button_ok'|translate}}</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">{{'sys_button_return'|translate}}</button>
+   </div>
+  </div>
+ </div>
+</div>

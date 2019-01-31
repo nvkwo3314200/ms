@@ -1,0 +1,42 @@
+
+<section class="content-header">
+	<h1>{{'sys_button_audit'|translate}}</h1>
+</section>
+
+<section class="content">
+
+	<div class="row">
+	        <div class="col-xs-12">
+	            <div class="box" >
+	                <div class="box-body" >
+						<table class="table table-bordered table-hover smart-table">
+							<tbody>
+								<tr >
+									<td>{{'sys_label_create_by'|translate}}</td>
+									<td>{{auditTrailData.createdBy}}</td>
+								</tr>
+								<tr >
+									<td>{{'sys_label_create_date'|translate}}</td>
+									<td>{{auditTrailData.createdDate | date:sysDateFormat}}</td>
+								</tr>
+								<tr >
+									<td>{{'sys_label_update_by'|translate}}</td>
+									<td>{{auditTrailData.lastUpdatedBy}}</td>
+								</tr>
+								<tr >
+									<td>{{'sys_label_update_date'|translate}}</td>
+									<td>{{auditTrailData.lastUpdatedDate | date:sysDateFormat}}</td>
+								</tr>
+							</tbody>
+						</table>
+	                    <div class="row">
+	                        <div class="col-md-12 text-right">
+	                             <button type="button" class="btn btn-primary" id="cancel" ng-click="cancel()">{{'sys_button_return'|translate}}</button>
+	                        </div>
+	                    </div>
+	                    
+	                </div>
+	            </div>
+	        </div>
+	  </div>
+</section>
