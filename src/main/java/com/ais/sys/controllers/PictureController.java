@@ -39,9 +39,9 @@ public class PictureController extends BaseController {
 	}
 	
 	@RequestMapping(value="delete")
-	public ResponseData<?> delete(@RequestBody Picture picture) {
+	public ResponseData<?> delete(@RequestBody final Picture[] pictures) {
 		try {
-			pictureService.deleteInfo(picture);
+			pictureService.deleteInfo(pictures);
 			return ResponseData.success(null,  null);
 		} catch (ServiceException e) {
 			return ResponseData.danger().add(e.getMessage());

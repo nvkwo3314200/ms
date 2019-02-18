@@ -94,7 +94,8 @@ public class ResponseData<T> {
 	public String getErrorMessage() {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < errorList.size(); i++) {
-			String msg = getMessageSource().getMessage(errorList.get(i), argsMap.get(errorList.get(i)), getLocale());
+			//String msg = getMessageSource().getMessage(errorList.get(i), argsMap.get(errorList.get(i)), getLocale());
+			String msg = errorList.get(i);
 			sb.append(msg);
 			if(i+1!=errorList.size()){
 				sb.append("<br/>");
