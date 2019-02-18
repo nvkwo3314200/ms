@@ -1,7 +1,11 @@
 package com.ais.sys.services;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,12 +37,36 @@ public class PictureService {
 	
 	public void deleteInfo(Picture picture) throws ServiceException {
 		if(picture.getId() != null) {
+			Picture picInfo = pictureMapper.selectByPrimaryKey(picture.getId());
+			if(picInfo != null) {
+				try {
+					deleteFile(picture);
+				} catch (IOException e) {
+					throw new ServiceException("删除文件失败：" + e.getMessage());
+				}
+			}
 			pictureMapper.deleteByPrimaryKey(picture.getId());
 		} else {
 			throw new ServiceException("id 不能为空");
 		}
 	}
 	
+	private void deleteFile(Picture picture) throws IOException {
+		String path = PropertiesUtils.getValue(ConstantUtil.PropertiesKeys.IMAGE_ROOT_PATH);
+		if(picture.getPicSubMinPath() != null) {
+			String[] imgs = picture.getPicSubMinPath().split(",");
+			if(imgs != null && imgs.length > 0) {
+				for(String img : imgs) {
+					if(StringUtils.isNotBlank(img)) {
+						String imgPath = path + img;
+						FileUtils.forceDelete(new File(imgPath));
+					}
+				}
+			}
+		}
+		
+	}
+
 	public Picture getInfo(Picture picture) {
 		Picture pictureModel = pictureMapper.selectByPrimaryKey(picture.getId());
 		if(pictureModel != null) {

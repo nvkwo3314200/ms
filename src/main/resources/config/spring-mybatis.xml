@@ -20,6 +20,7 @@
 		<property name="maxActive" value="${jdbc_maxActive}"/>
         <property name="maxIdle" value="${jdbc_maxIdle}"/>
         <property name="testOnBorrow" value="${jdbc_testOnBorrow}"/>
+        <property name="validationQuery" value="${validationQuery}"></property>
 	</bean>
 
 	<!-- myBatis文件 -->

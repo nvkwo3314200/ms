@@ -20,7 +20,7 @@ import com.ais.sys.services.SessionService;
 @Controller
 public class BaseController {
 
-	private static final Logger LOG = LoggerFactory.getLogger(BaseController.class);
+	protected Logger logger = LoggerFactory.getLogger(BaseController.class);
 
 	@Resource
 	protected ResponseDataService responseDataService;
@@ -41,7 +41,7 @@ public class BaseController {
 	@ResponseBody
 	@ExceptionHandler({ Exception.class })
 	public ErrorData handleException(final Exception excp) throws IOException {
-		LOG.error(excp.getMessage(), excp);
+		logger.error(excp.getMessage(), excp);
 		return handleErrorInternal(excp.getClass().getSimpleName(),
 				excp.getMessage());
 	}
@@ -60,7 +60,7 @@ public class BaseController {
 	@ExceptionHandler({ AccessDeniedException.class })
 	public ErrorData handleException(final AccessDeniedException excp)
 			throws IOException {
-		LOG.error(excp.getMessage(), excp);
+		logger.error(excp.getMessage(), excp);
 		return handleErrorInternal(excp.getClass().getSimpleName(),
 				excp.getMessage());
 	}
