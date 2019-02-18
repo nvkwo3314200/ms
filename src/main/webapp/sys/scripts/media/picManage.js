@@ -97,19 +97,11 @@ angular.module('psspAdminApp').controller('PicManageCtrl',
 				    return;
 			}
 			
-			$http.post('./menuManager/delete', $scope.selected).success(
+			console.log($scope.selected);
+			$http.post('./picture/delete', $scope.selected).success(	
 				function(data) {
 					if (data['errorType'] == "success") {
-						$scope.selected = [];
-						$scope.getMenuName();
-						$scope.searchmodel.lev1=undefined;
-						$scope.searchmodel.lev2=undefined;
-						$http.post('./menuManager/searchMenu', $scope.searchmodel).success(
-								function(data) {
-									if (data['errorType'] == "success") {
-										$scope.tableData = data.returnDataList;
-									}
-						});
+						$scope.search($scope.searchmodel);
 						alertService.add("success","Deleted successfully.");
 					}else {
 						

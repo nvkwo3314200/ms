@@ -1,11 +1,12 @@
 package com.ais.sys.services;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,19 +36,22 @@ public class PictureService {
 		return picList;
 	}
 	
-	public void deleteInfo(Picture picture) throws ServiceException {
-		if(picture.getId() != null) {
-			Picture picInfo = pictureMapper.selectByPrimaryKey(picture.getId());
-			if(picInfo != null) {
-				try {
-					deleteFile(picture);
-				} catch (IOException e) {
-					throw new ServiceException("删除文件失败：" + e.getMessage());
+	public void deleteInfo(Picture[] pictures) throws ServiceException {
+		for(Picture picture : pictures) {
+			if(picture.getId() != null) {
+				Picture picInfo = pictureMapper.selectByPrimaryKey(picture.getId());
+				if(picInfo != null) {
+					try {
+						deleteFile(picture);
+					} catch (IOException e) {
+						
+						throw new ServiceException("删除文件失败：" + e.getMessage());
+					}
 				}
+				pictureMapper.deleteByPrimaryKey(picture.getId());
+			} else {
+				throw new ServiceException("id 不能为空");
 			}
-			pictureMapper.deleteByPrimaryKey(picture.getId());
-		} else {
-			throw new ServiceException("id 不能为空");
 		}
 	}
 	
@@ -59,7 +63,15 @@ public class PictureService {
 				for(String img : imgs) {
 					if(StringUtils.isNotBlank(img)) {
 						String imgPath = path + img;
-						FileUtils.forceDelete(new File(imgPath));
+						try {
+							FileUtils.forceDelete(new File(imgPath));
+						} catch (IOException e) {
+							if(e instanceof FileNotFoundException) {
+								continue ;
+							} else {
+								throw e;
+							}
+						}
 					}
 				}
 			}
