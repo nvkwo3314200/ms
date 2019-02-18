@@ -74,6 +74,19 @@ public class ConstantUtil {
     public interface PropertiesKeys {
     	String IMAGE_HOST = "imageHost";
     	String IMAGE_PROTOCOL="imageProtocol";
+    	String IMAGE_ROOT_PATH="img.rootPath";
     }
+    
+    public interface ImageSize {
+		public int MIN_SIZE = 80;
+		public int MEDIUM_SIZE = 400;
+		public int MAX_SIZE = 1024;
+	}
+	
+	public interface ImageSubfix {
+		public String MIN_SUBFIX = "_S"; // small
+		public String MEDIUM_SUBFIX = "_M"; //middle
+		public String MAX_SUBFIX = "_L"; //large
+	}
 
 }
