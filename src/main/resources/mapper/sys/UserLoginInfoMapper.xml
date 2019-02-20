@@ -20,9 +20,21 @@
 			sui.USER_PROD_LN,
 			sul.OPERATE,
 			DATE_FORMAT(sul.operate_date,'%Y-%m-%d %H:%i:%s') OPERATE_DATE,
-			sul.IP
+			concat(
+			sul.IP,
+			'(',
+			ifnull(it.country, ''),
+			' ',
+			ifnull(it.region, ''),
+			' ',
+			ifnull(it.city,''),
+			' ',
+			ifnull(it.isp, ''),
+			')' 
+			) IP 
 		from 
-		SYS_USER_LOGINS sul, SYS_USER_INFO sui left join (select user_id, GROUP_CONCAT(ROLE_CODE) role_code from SYS_ROLE sr join SYS_USER_ROLE sur 
+		SYS_USER_LOGINS sul left join ip_table it on it.ip = sul.ip, 
+		SYS_USER_INFO sui left join (select user_id, GROUP_CONCAT(ROLE_CODE) role_code from SYS_ROLE sr join SYS_USER_ROLE sur 
 			on sr.id = sur.ROLE_ID
 	     GROUP by sur.user_id ) hh
 					on hh.user_id = sui.id

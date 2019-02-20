@@ -70,6 +70,7 @@ public class ConstantUtil {
     
     public static final String LOGIN_FAILURE_NAME="LOGIN_FAILURE_NAME";
     
+    public static final String QUERY_IP_URL = "url.ip"; 
     
     public interface PropertiesKeys {
     	String IMAGE_HOST = "imageHost";

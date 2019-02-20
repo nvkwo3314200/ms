@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.ais.sys.models.ErrorData;
+import com.ais.sys.services.RequestService;
 import com.ais.sys.services.ResponseDataService;
 import com.ais.sys.services.SessionService;
 
@@ -28,6 +29,8 @@ public class BaseController {
 	@Resource
 	protected SessionService sessionService;
 	
+	@Resource
+	protected RequestService requestService;
 	/**
 	 * 
 	 * @param excp

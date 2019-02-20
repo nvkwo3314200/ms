@@ -53,7 +53,7 @@ public class LoginController extends BaseController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(user !=null){
 			//init login ip lh-10-13
-			user.setIp(request.getRemoteAddr());
+			user.setIp(requestService.getRealRemoteIp());
 			sessionService.initCurrentUser(user);
 			sessionService.initCurrentUserPower(user.getUserCode());
 			
