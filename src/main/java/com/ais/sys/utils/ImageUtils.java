@@ -21,7 +21,7 @@ import com.ais.sys.models.Picture;
 public class ImageUtils {
 	
 	String host = PropertiesUtils.getValue(ConstantUtil.PropertiesKeys.IMAGE_HOST);
-	String rootPath = PropertiesUtils.getValue(ConstantUtil.PropertiesKeys.IMAGE_HOST);
+	String rootPath = PropertiesUtils.getValue(ConstantUtil.PropertiesKeys.IMAGE_ROOT_PATH);
 	
 	public Picture resizeImage(String imagePath, String name, String sub) throws IOException {
 		String fmt = getImageFormatByPath(imagePath);

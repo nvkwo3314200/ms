@@ -42,7 +42,7 @@ angular.module('psspAdminApp').controller('PicManageCtrl',
 		};
 		
 		$scope.create = function() {
-			$state.go('main.pic_add');
+			$state.go('main.pic_upload');
 		};
 		
 				
@@ -201,7 +201,6 @@ angular.module('psspAdminApp').controller('PicManageCtrl',
 	            result.relativeY -= offY;
 	          }
 	          result.currentDomId = mouseEvent.target.id;
-	   
 	          return result;
 	        };
 	        
@@ -222,8 +221,6 @@ angular.module('psspAdminApp').controller('PicManageCtrl',
 	    	   $timeout(function() {
 	    		   $scope.floatImage.show = false;
 	    	   }, 0);
-	    	   
-	    	   console.log("hide");
 	       }
 	       
 	       $scope.movePicture = function(mouseEvent) {

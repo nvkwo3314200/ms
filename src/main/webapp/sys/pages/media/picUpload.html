@@ -1,0 +1,64 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>图片<span ng-show='new'>上传</span><span ng-show='!new'>信息编辑</span></h1>
+</section>
+
+<style>
+	.file-name{
+    width: 300px;
+    height: 30px;
+    line-height: 30px;
+	}
+	
+	.small-tip {
+		color: red;
+	}
+</style>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box" >
+                <div class="box-body">
+					<uib-alert ng-repeat="alert in alerts" type="{{alert.type}}"
+						close="alert.close($index)">
+					<div translate="{{alert.msg}}"></div>
+					</uib-alert>
+					
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-line">
+						    	<label>请选择要图片上传的文件：</label><span class="small-tip">文件大小10M以内</span>
+						        <div class="choose-file-area">
+						        	<div ng-repeat="fileItem in fileItems">
+						            	<input class="file-name" type="text" readonly="readonly"  ng-model="fileItem._file.name"/>
+						            	<a href="javascript:;" class="choose-book" ng-click="removeItem(fileItem);">
+						            		移除
+						            	</a>
+						            </div>
+						            <div ng-if="fileItems == null || fileItems.length == 0">
+						            	<input class="file-name" type="text" readonly="readonly"  ng-model="fileItem.name"/>
+						            </div>
+						            <a href="javascript:;" class="choose-book">
+						                <input type="file" name="certificate" accept="image/*" multiple="multiple" nv-file-select uploader="uploader" ng-click="clearItems()"/>
+						            </a>
+						        </div>
+					        </div>
+					    </div>
+					</div>
+            	</div>
+            	
+	            <div class="row">
+					<div class="col-md-12 text-left">
+						<button type="submit" class="btn btn-primary" ng-click="UploadFile()">提交</button>
+						<button type="button" class="btn btn-primary" ng-click="cancel()">{{'sys_button_return'|translate}}</button>
+					</div>
+				</div>
+        	</div>
+    	</div>
+    </div>
+</section>
+
+
+

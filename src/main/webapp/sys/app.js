@@ -337,6 +337,20 @@ function (
 		}
 	})
 	
+	.state('main.pic_upload', {
+		templateUrl: 'sys/pages/media/picUpload.html',
+		url: '/picUpload',
+		controller: 'picUploadCtrl',
+		resolve: {
+			loadMyFiles: function ($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					name: 'psspAdminApp',
+					files: [ 'sys/scripts/media/picUpload.js' ]
+				});
+			}
+		}
+	})
+	
 	.state('main.cpaAnaBookOrd', {
 		templateUrl: 'ms/pages/newSingle.html',
 		url: '/newSingle',

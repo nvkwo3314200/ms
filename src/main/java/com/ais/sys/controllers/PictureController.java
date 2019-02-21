@@ -104,6 +104,6 @@ public class PictureController extends BaseController {
 			logger.error(e.getMessage());
 			model.addAttribute("MESSAGE", "上传文件失败");
 		}
-		return "picture";
+		return null;
 	}
 }
