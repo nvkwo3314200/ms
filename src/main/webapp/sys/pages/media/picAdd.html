@@ -49,6 +49,18 @@
 							  	<input type="number" class="form-control" ng-disabled="state" required maxlength="200"  placeholder="请输入图片长度" ng-model="picModel.length">
 						</div>
 						</div>
+						<div class="row">
+						  <div class="col-md-4"><label class="control-label">坐标</label></div>
+						  <div class="col-md-6">
+							  	<input type="text" class="form-control" ng-disabled="state" maxlength="200"  placeholder="请输入拍摄坐标" ng-model="picModel.location">
+						</div>
+						</div>
+						<div class="row">
+						  <div class="col-md-4"><label class="control-label">图片描述</label></div>
+						  <div class="col-md-6">
+							  	<textarea class="form-control" ng-disabled="state" rows="5" placeholder="请输入图片描述" ng-model="picModel.picDesc"></textarea>
+						</div>
+						</div>
 	            	</div>
 	            	<div style="width: 15%; display: inline-block;">
 	            		<div class="row">
@@ -58,14 +70,14 @@
 						</div>
 	            		<div class="row">
 						  <div class="col-md-12">
-							  	<img height="150px" alt="" src="{{picModel.protocol}}{{picModel.host}}/{{picModel.middlePicture}}" />
+							  	<img height="300px" alt="" src="{{picModel.protocol}}{{picModel.host}}/{{picModel.middlePicture}}" />
 						  </div>
 						</div>
 	            	</div>
             	</div>
             	
-	            <div class="row">
-					<div class="col-md-12 text-right">
+	            <div class="row button_btn">
+					<div class="col-md-8 text-right">
 						<button type="button" class="btn btn-primary" ng-if="!state" ng-click="save()">{{'sys_button_save'|translate}}</button>
 						<button type="button" class="btn btn-primary" ng-click="cancel()">{{'sys_button_return'|translate}}</button>
 					</div>

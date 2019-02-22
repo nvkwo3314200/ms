@@ -21,7 +21,9 @@ import com.ais.sys.exception.ServiceException;
 import com.ais.sys.models.Picture;
 import com.ais.sys.models.ResponseData;
 import com.ais.sys.services.PictureService;
+import com.ais.sys.services.SessionService;
 import com.ais.sys.utils.ImageUtils;
+import com.jcraft.jsch.Session;
 
 @RestController
 @RequestMapping(value="picture")
@@ -33,6 +35,8 @@ public class PictureController extends BaseController {
 	@Autowired 
 	ImageUtils imageUtils;
 	
+	@Autowired
+	SessionService sessionService;
 	@RequestMapping(value="search")
 	public ResponseData<?> search(@RequestBody Picture picture) {
 		return ResponseData.success(pictureService.search(picture), null);
@@ -63,7 +67,9 @@ public class PictureController extends BaseController {
 	
 	@RequestMapping(value="save")
 	public ResponseData<?> save(@RequestBody Picture picture) {
+		picture.setLastUpdatedBy(sessionService.getCurrentUser().getUserCode());
 		if(picture.getId() == null) {
+			picture.setCreatedBy(sessionService.getCurrentUser().getUserCode());
 			pictureService.insertInfo(picture);
 		} else {
 			pictureService.updateInfo(picture);
@@ -91,6 +97,8 @@ public class PictureController extends BaseController {
 				String des = realPath + File.separator + filename;
 				file.transferTo(new File(des));
 				Picture picture = imageUtils.resizeImage(des, filename, null);
+				picture.setLastUpdatedBy(sessionService.getCurrentUser().getUserCode());
+				picture.setCreatedBy(sessionService.getCurrentUser().getUserCode());
 				pictureService.insertInfo(picture);
 				FileUtils.forceDeleteOnExit(new File(des));
 				model.addAttribute("MESSAGE", "上传文件成功");

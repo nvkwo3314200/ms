@@ -20,14 +20,6 @@ public class Picture extends BaseModel{
 
     private String picSubMinPath;
 
-    private Date createTime;
-
-    private String createBy;
-
-    private Date updateTime;
-
-    private String lastUpdateBy;
-
     private Double picSize;
 
     private Double width;
@@ -40,6 +32,8 @@ public class Picture extends BaseModel{
     
     private String protocol;
     
+    private String picDesc; // 图片描述
+    
     public Picture(Integer page, Integer size) {
     	setPage(page);
     	setSize(size);
@@ -50,15 +44,32 @@ public class Picture extends BaseModel{
         this.picSubPath = picSubPath;
         this.picName = picName;
         this.picSubMinPath = picSubMinPath;
-        this.createTime = createTime;
-        this.createBy = createBy;
-        this.updateTime = updateTime;
-        this.lastUpdateBy = lastUpdateBy;
+        setCreatedDate(createTime);
+        setCreatedBy(createBy);
+        setLastUpdatedDate(updateTime);
+        setLastUpdatedBy(lastUpdateBy);
         this.picSize = picSize;
         this.width = width;
         this.length = length;
         this.location = location;
     }
+    
+    public Picture(Integer id, String picSubPath, String picName, String picSubMinPath, Date createTime, String createBy, Date updateTime, String lastUpdateBy, Double picSize, Double width, Double length, String location, String picDesc) {
+        this.id = id;
+        this.picSubPath = picSubPath;
+        this.picName = picName;
+        this.picSubMinPath = picSubMinPath;
+        setCreatedDate(createTime);
+        setCreatedBy(createBy);
+        setLastUpdatedDate(updateTime);
+        setLastUpdatedBy(lastUpdateBy);
+        this.picSize = picSize;
+        this.width = width;
+        this.length = length;
+        this.location = location;
+        this.picDesc = picDesc;
+    }
+
 
     public Picture() {
         super();
@@ -95,39 +106,6 @@ public class Picture extends BaseModel{
     public void setPicSubMinPath(String picSubMinPath) {
         this.picSubMinPath = picSubMinPath == null ? null : picSubMinPath.trim();
     }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(String createBy) {
-        this.createBy = createBy == null ? null : createBy.trim();
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public String getLastUpdateBy() {
-        return lastUpdateBy;
-    }
-
-    public void setLastUpdateBy(String lastUpdateBy) {
-        this.lastUpdateBy = lastUpdateBy == null ? null : lastUpdateBy.trim();
-    }
-
     public Double getPicSize() {
         return picSize;
     }
@@ -198,6 +176,14 @@ public class Picture extends BaseModel{
 
 	public void setLargePicture(String largePicture) {
 		this.largePicture = largePicture;
+	}
+
+	public String getPicDesc() {
+		return picDesc;
+	}
+
+	public void setPicDesc(String picDesc) {
+		this.picDesc = picDesc;
 	}
     
 }

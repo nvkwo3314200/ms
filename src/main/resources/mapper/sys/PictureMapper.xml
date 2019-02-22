@@ -7,23 +7,44 @@
       <arg column="pic_sub_path" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="pic_name" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="pic_sub_min_path" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="create_by" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="last_update_by" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="created_Date" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="created_by" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="last_updated_date" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="last_updated_by" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="picSize" jdbcType="DOUBLE" javaType="java.lang.Double" />
       <arg column="width" jdbcType="DOUBLE" javaType="java.lang.Double" />
       <arg column="length" jdbcType="DOUBLE" javaType="java.lang.Double" />
       <arg column="location" jdbcType="VARCHAR" javaType="java.lang.String" />
     </constructor>
   </resultMap>
+  <resultMap id="DetailsResultMap" type="com.ais.sys.models.Picture" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="pic_sub_path" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="pic_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="pic_sub_min_path" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="created_Date" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="created_by" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="last_updated_date" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="last_updated_by" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="picSize" jdbcType="DOUBLE" javaType="java.lang.Double" />
+      <arg column="width" jdbcType="DOUBLE" javaType="java.lang.Double" />
+      <arg column="length" jdbcType="DOUBLE" javaType="java.lang.Double" />
+      <arg column="location" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="pic_desc" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
   <sql id="Base_Column_List" >
-    id, pic_sub_path, pic_name, pic_sub_min_path, create_time, create_by, update_time, 
-    last_update_by, size picSize, width, length, location
+    id, pic_sub_path, pic_name, pic_sub_min_path, created_Date, created_by, last_updated_date, 
+    last_updated_by, size picSize, width, length, location
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <sql id="Detail_Column_List" >
+    id, pic_sub_path, pic_name, pic_sub_min_path, created_Date, created_by, last_updated_date, 
+    last_updated_by, size picSize, width, length, location, pic_desc
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="DetailsResultMap" parameterType="java.lang.Integer" >
     select 
-    <include refid="Base_Column_List" />
+    <include refid="Detail_Column_List" />
     from media_picture
     where id = #{id,jdbcType=INTEGER}
   </select>
@@ -48,13 +69,13 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into media_picture (pic_sub_path, pic_name, pic_sub_min_path, 
-      create_time, create_by, update_time, 
-      last_update_by, size, width, 
-      length, location)
+      created_Date, created_by, last_updated_date, 
+      last_updated_by, size, width, 
+      length, location, pic_desc)
     values (#{picSubPath,jdbcType=VARCHAR}, #{picName,jdbcType=VARCHAR}, #{picSubMinPath,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{lastUpdateBy,jdbcType=VARCHAR}, #{picSize,jdbcType=DOUBLE}, #{width,jdbcType=DOUBLE}, 
-      #{length,jdbcType=DOUBLE}, #{location,jdbcType=VARCHAR})
+      now(), #{createdBy,jdbcType=VARCHAR}, now(), 
+      #{lastUpdatedBy,jdbcType=VARCHAR}, #{picSize,jdbcType=DOUBLE}, #{width,jdbcType=DOUBLE}, 
+      #{length,jdbcType=DOUBLE}, #{location,jdbcType=VARCHAR}, #{picDesc,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.ais.sys.models.Picture" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -71,17 +92,13 @@
       <if test="picSubMinPath != null" >
         pic_sub_min_path,
       </if>
-      <if test="createTime != null" >
-        create_time,
+        created_Date,
+      <if test="createdBy != null" >
+        created_by,
       </if>
-      <if test="createBy != null" >
-        create_by,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
-      <if test="lastUpdateBy != null" >
-        last_update_by,
+        last_updated_date,
+      <if test="lastUpdatedBy != null" >
+        last_updated_by,
       </if>
       <if test="picSize != null" >
         size,
@@ -95,6 +112,9 @@
       <if test="location != null" >
         location,
       </if>
+      <if test="picDesc != null" >
+        pic_desc,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="picSubPath != null" >
@@ -106,17 +126,13 @@
       <if test="picSubMinPath != null" >
         #{picSubMinPath,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
+        now(),
+      <if test="createdBy != null" >
+        #{createdBy,jdbcType=VARCHAR},
       </if>
-      <if test="createBy != null" >
-        #{createBy,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="lastUpdateBy != null" >
-        #{lastUpdateBy,jdbcType=VARCHAR},
+        now(),
+      <if test="lastUpdatedBy != null" >
+        #{lastUpdatedBy,jdbcType=VARCHAR},
       </if>
       <if test="picSize != null" >
         #{picSize,jdbcType=DOUBLE},
@@ -129,6 +145,9 @@
       </if>
       <if test="location != null" >
         #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="picDesc != null" >
+        #{picDesc,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -144,17 +163,15 @@
       <if test="picSubMinPath != null" >
         pic_sub_min_path = #{picSubMinPath,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
+      <if test="createdDate != null" >
+        created_Date = #{createdDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="createBy != null" >
-        create_by = #{createBy,jdbcType=VARCHAR},
+      <if test="createdBy != null" >
+        created_by = #{createdBy,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="lastUpdateBy != null" >
-        last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+        last_updated_date = now(),
+      <if test="lastUpdatedBy != null" >
+        last_updated_by = #{lastUpdatedBy,jdbcType=VARCHAR},
       </if>
       <if test="picSize != null" >
         size = #{picSize,jdbcType=DOUBLE},
@@ -168,6 +185,9 @@
       <if test="location != null" >
         location = #{location,jdbcType=VARCHAR},
       </if>
+      <if test="picDesc != null" >
+        pic_desc = #{picDesc,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -176,14 +196,15 @@
     set pic_sub_path = #{picSubPath,jdbcType=VARCHAR},
       pic_name = #{picName,jdbcType=VARCHAR},
       pic_sub_min_path = #{picSubMinPath,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      create_by = #{createBy,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+      created_Date = now(),
+      created_by = #{createdBy,jdbcType=VARCHAR},
+      last_updated_date = now(),
+      last_updated_by = #{lastUpdatedBy,jdbcType=VARCHAR},
       size = #{picSize,jdbcType=DOUBLE},
       width = #{width,jdbcType=DOUBLE},
       length = #{length,jdbcType=DOUBLE},
-      location = #{location,jdbcType=VARCHAR}
+      location = #{location,jdbcType=VARCHAR},
+      pic_desc = #{picDesc,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

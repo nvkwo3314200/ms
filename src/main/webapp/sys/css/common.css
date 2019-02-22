@@ -255,3 +255,7 @@ p{
 .modal-open{
 	padding-right: 17px;
 }
+
+.button_btn {
+	padding-bottom: 5px;
+}
