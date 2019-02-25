@@ -51,7 +51,7 @@ angular
 							};
 
 							$scope.cancel = function() {
-								 $state.go('main.pic_manager');
+								$state.go('main.picManage');
 								
 							};
 							
