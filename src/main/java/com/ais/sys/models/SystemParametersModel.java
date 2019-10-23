@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class SystemParametersModel extends BaseModel implements Cloneable{
+	private static final long serialVersionUID = -6539301774758872295L;
+
 	private Integer id;
 	
 	@ReportColumn

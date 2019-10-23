@@ -44,7 +44,7 @@ public class SystemParametersService extends BaseService {
 		return systemParametersDao;
 	}
 	
-	@Autowired
+	@Resource
 	public void setSystemParametersDao(SystemParametersDao systemParametersDao) {
 		this.systemParametersDao = systemParametersDao;
 	}

@@ -16,6 +16,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class UserInfoModel extends BaseModel implements HttpSessionBindingListener{
 	
+	private static final long serialVersionUID = 6641264991752813549L;
+
 	private static final Logger LOG = LoggerFactory.getLogger(UserInfoModel.class);
 	
     private Integer id;

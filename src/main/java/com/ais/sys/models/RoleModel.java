@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class RoleModel extends BaseModel {
-	
-    private Integer id;
+	private static final long serialVersionUID = -4600275773098401495L;
+	private Integer id;
     private String roleCode;
     private String roleName;
     private String roleRemark;

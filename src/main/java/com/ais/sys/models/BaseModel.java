@@ -1,11 +1,14 @@
 package com.ais.sys.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-public class BaseModel {
+public class BaseModel implements Serializable{
 	
+	private static final long serialVersionUID = -617238688705324481L;
+
 	private String createdBy;
 
     private Date createdDate;

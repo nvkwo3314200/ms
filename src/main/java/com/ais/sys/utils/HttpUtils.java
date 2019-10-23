@@ -49,7 +49,7 @@ public class HttpUtils {
 		IpTable ipTable = null;
 		String url = PropertiesUtils.getValue(ConstantUtil.QUERY_IP_URL, ip);
 		String result = doGet(url, "GET");
-		Map<String, Object> map = (Map<String, Object>) JsonUtils.JsonToMap(result);
+		Map<String, Object> map = (Map<String, Object>) JsonUtils.json2Object(result, Map.class);
 		if(map != null && (Integer)map.get(M_CODE) == 0) {
 			Map<String, String> dataMap = (Map<String, String>)map.get(M_DATA);
 			ipTable = (IpTable) JSONObject.toBean((JSONObject)dataMap, IpTable.class);

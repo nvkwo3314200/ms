@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class BusUnitModel extends BaseModel {
+	private static final long serialVersionUID = 1095092083891079712L;
+	
 	private String busUnitCode;
 	private String busUnitName;
 	private String sql;

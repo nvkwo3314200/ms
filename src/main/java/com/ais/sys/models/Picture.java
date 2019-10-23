@@ -1,12 +1,16 @@
 package com.ais.sys.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class Picture extends BaseModel{
-    private Integer id;
+public class Picture extends BaseModel implements Serializable{
+	
+	private static final long serialVersionUID = -8093239217865869608L;
+
+	private Integer id;
 
     private String picSubPath;
     
@@ -184,6 +188,14 @@ public class Picture extends BaseModel{
 
 	public void setPicDesc(String picDesc) {
 		this.picDesc = picDesc;
+	}
+
+	@Override
+	public String toString() {
+		return "Picture [id=" + id + ", picSubPath=" + picSubPath + ", mainPicture=" + mainPicture + ", middlePicture="
+				+ middlePicture + ", largePicture=" + largePicture + ", picName=" + picName + ", picSubMinPath="
+				+ picSubMinPath + ", picSize=" + picSize + ", width=" + width + ", length=" + length + ", location="
+				+ location + ", host=" + host + ", protocol=" + protocol + ", picDesc=" + picDesc + "]";
 	}
     
 }

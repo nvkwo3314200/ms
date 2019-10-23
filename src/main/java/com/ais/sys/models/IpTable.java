@@ -1,10 +1,14 @@
 package com.ais.sys.models;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class IpTable {
-    private Integer id;
+public class IpTable implements Serializable {
+	private static final long serialVersionUID = 2838599802012439466L;
+
+	private Integer id;
 
     private String ip;
 

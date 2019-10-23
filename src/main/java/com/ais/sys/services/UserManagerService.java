@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.ais.sys.cache.RedisCache;
+import com.ais.sys.cache.RedisEvict;
 import com.ais.sys.daos.UserManagerMapper;
 import com.ais.sys.daos.UserRoleManagerMapper;
 import com.ais.sys.exception.ServiceException;
@@ -58,6 +60,7 @@ public class UserManagerService extends BaseService{
 		this.userRoleManagerMapper = userRoleManagerMapper;
 	}
 	
+	@RedisCache(type=UserInfoModel.class)
 	public List<UserInfoModel> selectUserList(UserInfoModel searchUserVo) throws ServiceException {
 		try {
 			List<UserInfoModel> list = userManagerMapper.selectUserList(searchUserVo);
@@ -71,6 +74,7 @@ public class UserManagerService extends BaseService{
 		return new ArrayList<UserInfoModel>();
 	}
 	
+	@RedisCache(type=UserInfoModel.class)
 	public PageInfo<UserInfoModel> search(UserInfoModel searchUserVo) throws ServiceException {
 		try {
 			return PageHelper.startPage(searchUserVo.getPage(), searchUserVo.getSize()).doSelectPageInfo(() -> userManagerMapper.selectUserList(searchUserVo));
@@ -137,7 +141,7 @@ public class UserManagerService extends BaseService{
 		return responseData;
 	}
 
-	
+	@RedisEvict(type=UserInfoModel.class)
 	public void addUser(UserInfoModel userInfoVo,ResponseData<UserInfoModel> responseData)
 			throws ServiceException {
 		try {
@@ -163,7 +167,7 @@ public class UserManagerService extends BaseService{
 	}
 	
 
-	
+	@RedisEvict(type=UserInfoModel.class)
 	public int insertUser(UserInfoModel userVo) {
 		userVo.setCreatedBy(sessionService.getCurrentUser().getUserCode());
 		userVo.setCreatedDate(new Date());
@@ -174,7 +178,7 @@ public class UserManagerService extends BaseService{
 		return id;
 	}
 	
-
+	@RedisEvict(type=UserInfoModel.class)
 	public int updateUser(UserInfoModel userVo) {
 		int inserSupper = 0;
 		userVo.setLastUpdatedBy(sessionService.getCurrentUser().getUserCode());
@@ -194,7 +198,8 @@ public class UserManagerService extends BaseService{
 		}
 		return userInfoVo;
 	}
-
+	
+	@RedisEvict(type=UserInfoModel.class)
 	public int deleteByPrimaryKey(String ids) {
 		if (StringUtils.isNotEmpty(ids)) {
 			String[] pStrings = StringUtil.getAllProductId(ids);

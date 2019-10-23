@@ -10,6 +10,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ais.sys.cache.RedisCache;
+import com.ais.sys.cache.RedisEvict;
 import com.ais.sys.daos.PictureMapper;
 import com.ais.sys.exception.ServiceException;
 import com.ais.sys.models.Picture;
@@ -23,19 +25,24 @@ public class PictureService {
 	@Autowired
 	PictureMapper pictureMapper;
 	
+	@RedisCache(type = Picture.class)
 	public PageInfo<Picture> search(final Picture picture) {
-		PageInfo<Picture> pageInfo = PageHelper.startPage(picture.getPage(), picture.getSize())
+		PageInfo<Picture> pageInfo = null;
+		pageInfo = PageHelper.startPage(picture.getPage(), picture.getSize())
 				.doSelectPageInfo(() -> pictureMapper.selectByModel(picture));
 		setMainPicturePath(pageInfo.getList());
 		return pageInfo;
 	}
 	
+	@RedisCache(type = Picture.class)
 	public List<Picture> list(Picture picture) {
-		List<Picture> picList = pictureMapper.selectByModel(picture);
-		setMainPicturePath(picList);
+		List<Picture> picList = null;
+			picList = pictureMapper.selectByModel(picture);
+			setMainPicturePath(picList);
 		return picList;
 	}
 	
+	@RedisEvict(type = Picture.class)
 	public void deleteInfo(Picture[] pictures) throws ServiceException {
 		for(Picture picture : pictures) {
 			if(picture.getId() != null) {
@@ -78,7 +85,8 @@ public class PictureService {
 		}
 		
 	}
-
+	
+	@RedisCache(type = Picture.class)
 	public Picture getInfo(Picture picture) {
 		Picture pictureModel = pictureMapper.selectByPrimaryKey(picture.getId());
 		if(pictureModel != null) {
@@ -88,10 +96,12 @@ public class PictureService {
 		return pictureModel;
 	}
 	
+	@RedisEvict(type = Picture.class)
 	public void insertInfo(Picture picture) {
 		pictureMapper.insertSelective(picture);
 	}
 	
+	@RedisEvict(type = Picture.class)
 	public void updateInfo(Picture picture) {
 		pictureMapper.updateByPrimaryKeySelective(picture);
 	}

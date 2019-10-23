@@ -1,18 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:aop="http://www.springframework.org/schema/aop"
-	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task"
+	   xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 		
 	<!-- 配置切面扫描 -->
 	<context:component-scan base-package="com.ais.**">
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<!-- 
 		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+		 -->
 	</context:component-scan>
 	
+	<bean id="redisTemplateForString" class="org.springframework.data.redis.core.StringRedisTemplate">
+        <property name="connectionFactory"   ref="jedisConnectionFactory" />
+    </bean>
+    
+	<aop:aspectj-autoproxy/>
+	<!--扫描redis切面
+    <context:component-scan base-package="com.ais.sys.advice" use-default-filters="false">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Component"></context:include-filter>
+    </context:component-scan>
+	-->
 	<!-- 
 	<bean id="yearlyCapacityAnalysisHandler" scope="prototype" class="com.ais.ms.report.YearlyCapacityAnalysisHandler" />
 	
@@ -21,10 +33,11 @@
 	<bean id="orderDateMgtHandler" class="com.ais.ms.report.OrderDateMgtHandler" />
 	-->
 	<bean id="propertyConfigurer"
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		class="com.ais.sys.security.EncryptPropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
 				<value>classpath:db/jdbc.properties</value>
+				<value>classpath:config/redis.properties</value>
 			</list>
 		</property>
 	</bean>
@@ -34,7 +47,7 @@
 			<!-- 定义消息资源文件的相对路径 -->
 			<value>messages/message</value>
 		</property>
-	</bean> 
+	</bean>
 	
 	<import resource="spring-security-config.xml"/>
 	<!-- 单点登录配置
@@ -60,4 +73,31 @@
         </property>  
     </bean>
      --> 	
+    
+    <!-- 
+    <bean id="springSessionDefaultRedisSerializer" class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer"/>
+     --> 
+    <bean id="redisHttpSessionConfiguration"
+	      class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration">
+	    <property name="maxInactiveIntervalInSeconds" value="600"/>
+	</bean>
+     
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+	    <property name="maxTotal" value="100" />
+	    <property name="maxIdle" value="10" />
+	</bean>
+
+	<bean id="jedisConnectionFactory"
+	      class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" destroy-method="destroy">
+	    <property name="hostName" value="${master.redis.ip}"/>
+	    <property name="port" value="${master.redis.port}"/>
+	    <property name="password" value="${master.redis.password}" />
+	    <property name="timeout" value="3000"/>
+	    <property name="usePool" value="true"/>
+	    <property name="poolConfig" ref="jedisPoolConfig"/>
+	</bean>
+
+	<task:annotation-driven scheduler="scheduler"/>
+	<task:scheduler id="scheduler" pool-size="2"/>
+
 </beans>

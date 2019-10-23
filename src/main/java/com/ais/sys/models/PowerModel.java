@@ -1,9 +1,12 @@
 package com.ais.sys.models;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class PowerModel {
+public class PowerModel implements Serializable{
+	private static final long serialVersionUID = -1478988670242738530L;
 	private Integer userId;
 	private String url;
 	private String funcName;

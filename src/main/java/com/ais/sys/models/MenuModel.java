@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class MenuModel extends BaseModel {
+	
+	private static final long serialVersionUID = -7266959489206555797L;
+
 	public MenuModel(){
 		
 	}

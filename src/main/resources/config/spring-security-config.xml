@@ -40,11 +40,11 @@
 		<!-- 
 		<security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/> -->
 		
-		<!-- token-validity 30 days -->  
+		<!-- token-validity 30 days
 		<security:remember-me data-source-ref="dataSource" 
 				token-validity-seconds="2592000" 
 				remember-me-parameter="rememberMe"/>
-		
+		 -->  
 		<!-- anonymous authentication
 		<security:anonymous username="anonymous" granted-authority="ROLE_ANONYMOUS" />-->
 		
