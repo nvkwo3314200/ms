@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
-@RestController("onenote")
-public class OneNoteApi {
+@RestController("note")
+public class OneNoteApiController {
 
     @Resource
     QuoteService quoteService;
 
-    @GetMapping
+    @GetMapping("getone")
     public Quote getOneNote() {
         Quote randomOne = quoteService.findRandomOne();
         Quote quote = new Quote();
