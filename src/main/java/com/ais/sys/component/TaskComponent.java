@@ -50,7 +50,7 @@ public class TaskComponent {
     @Resource
     OneNoteTaskService oneNoteTaskService;
 
-    @Scheduled(cron = "0 */2 * * * ?")  // 每分钟执行一次
+    @Scheduled(cron = "12 12 */2 * * ?")  // 每两个小时执行一次
     public void quoteJob() throws ServiceException {
         log.info("quote job start");
         startQuoteTask();
