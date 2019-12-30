@@ -60,7 +60,7 @@ public class UserManagerService extends BaseService{
 		this.userRoleManagerMapper = userRoleManagerMapper;
 	}
 	
-	@RedisCache(type=UserInfoModel.class)
+	//@RedisCache(type=UserInfoModel.class)
 	public List<UserInfoModel> selectUserList(UserInfoModel searchUserVo) throws ServiceException {
 		try {
 			List<UserInfoModel> list = userManagerMapper.selectUserList(searchUserVo);

@@ -14,11 +14,24 @@ public final class DateUtil {
 	private static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
 	
 	private static final String DEFAULT_BETWEEN_DATE_PATTERN = "yyyy-MM-dd";
+	private static final String DEFAULT_BETWEEN_DATE_PATTERN2 = "yyyyMMdd";
 	
 	private DateUtil() {}
 	
 	public static Date parse(String source) throws ParseException {
 		return parse(source, DEFAULT_DATE_PATTERN);
+	}
+
+	public static Date parseDateOnly(String source){
+		try {
+			return parse(source, DEFAULT_BETWEEN_DATE_PATTERN);
+		} catch (ParseException e) {
+			try {
+				return parse(source, DEFAULT_BETWEEN_DATE_PATTERN2);
+			} catch (ParseException ex) {
+				return null;
+			}
+		}
 	}
 	
 	public static Date parse(String source, String pattern) throws ParseException {

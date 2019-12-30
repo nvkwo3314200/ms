@@ -64,6 +64,9 @@
 	      <if test="userName != null">
 			and (b.REAL_NAME)like concat('%',#{userName,jdbcType=VARCHAR},'%')
 		  </if>
+		<if test="ssoLoginId != null">
+			and sso_login_id = #{ssoLoginId,jdbcType=VARCHAR}
+		</if>
 		order by ID
   	</select>
   	
@@ -84,6 +87,9 @@
 				  </if>
 			      <if test="userName != null">
 					and (b.REAL_NAME)like  concat('%',#{userName,jdbcType=VARCHAR},'%')
+				  </if>
+				  <if test="ssoLoginId != null">
+					and B.SSO_LOGIN_ID = #{ssoLoginId,jdbcType=VARCHAR}
 				  </if>
 				order by ID
 				) t
