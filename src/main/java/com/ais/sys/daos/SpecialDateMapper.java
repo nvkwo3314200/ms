@@ -14,4 +14,7 @@ public interface SpecialDateMapper {
     int updateByPrimaryKeySelective(SpecialDate record);
 
     int updateByPrimaryKey(SpecialDate record);
+
+    SpecialDate select(SpecialDate specialDate);
+
 }

@@ -24,6 +24,12 @@
     from t_special_date
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="select" resultMap="BaseResultMap" parameterType="com.ais.sys.models.SpecialDate" >
+    select
+    <include refid="Base_Column_List" />
+    from t_special_date
+    where special_date = #{specialDate,jdbcType=TIMESTAMP}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_special_date
     where id = #{id,jdbcType=INTEGER}
@@ -35,7 +41,7 @@
     insert into t_special_date (special_date, name, type, 
       create_by, last_update_by, create_date, 
       last_update_date, remark)
-    values (#{specialDate,jdbcType=DATE}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
+    values (#{specialDate,jdbcType=DATE}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
       #{createBy,jdbcType=VARCHAR}, #{lastUpdateBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
       #{lastUpdateDate,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
   </insert>
