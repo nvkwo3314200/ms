@@ -79,6 +79,7 @@ public class CallDateService {
         if(callDate == null) throw new ServiceException("wrong info");
         if(!callDate.getCreateBy().equals(backModel.getUserCode())) throw new ServiceException("wrong info");
         callDate.setStatus(status);
+        callDate.setLastUpdateDate(new Date());
         update(callDate);
     }
 }
