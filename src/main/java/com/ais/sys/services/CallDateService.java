@@ -3,10 +3,7 @@ package com.ais.sys.services;
 import com.ais.sys.daos.CallDateMapper;
 import com.ais.sys.exception.ServiceException;
 import com.ais.sys.models.CallDate;
-import com.ais.sys.models.Picture;
 import com.ais.sys.models.UserInfoModel;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,8 +30,8 @@ public class CallDateService {
         CallDate callDateModel = null;
         if(callDateList.size() != 0) {
             callDateModel = callDateList.get(0);
+            callDateModel.setEmail(backModel.getEmail());
         }
-        callDateModel.setEmail(backModel.getEmail());
         return callDateModel;
     }
 
