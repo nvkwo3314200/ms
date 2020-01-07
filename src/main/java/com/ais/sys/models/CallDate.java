@@ -25,6 +25,11 @@ public class CallDate extends BaseModel {
 
     private String email;
 
+    public CallDate(Integer status, String createBy) {
+        this.status = status;
+        this.createBy = createBy;
+    }
+
     public CallDate(Integer id, Date execDate, Integer waitSecond, Integer status, String createBy, String lastUpdateBy, Date createDate, Date lastUpdateDate, String remark) {
         this.id = id;
         this.execDate = execDate;

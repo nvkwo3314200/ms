@@ -48,7 +48,12 @@ public class CallDateService {
     public CallDate addCallDate(String token) throws ServiceException {
         UserInfoModel backModel = getUserInfoModelByToken(token);
         CallDate callDate = new CallDate(null, new Date(), getWaitTime(), 1, backModel.getUserCode(), backModel.getUserCode(), new Date(), new Date(), null);
-        insert(callDate);
+        synchronized (this) {
+            CallDate queryDate = new CallDate(1, backModel.getUserCode());
+            List<CallDate> callDateList = callDateMapper.selectByModel(queryDate);
+            if(callDateList.size() > 0) return callDateList.get(0);
+            insert(callDate);
+        }
         return callDateMapper.selectByPrimaryKey(callDate.getId());
     }
 
