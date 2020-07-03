@@ -13,7 +13,7 @@
 		<spring.version>4.3.18.RELEASE</spring.version>
 		<spring.security.version>4.2.5.RELEASE</spring.security.version>
 		<aspectj.version>1.8.8</aspectj.version>
-		<jackson.version>2.9.7</jackson.version>
+		<jackson.version>2.11.1</jackson.version>
 	</properties>
 
 	<dependencies>
