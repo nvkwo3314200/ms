@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <html>
 	<head>
 		<meta charset="utf-8">
@@ -90,4 +91,12 @@
 			<div ui-view></div>
 		</div>
 	</body>
+	<div style="width: 100%;text-align: center; margin-top: 15px;">
+		<div>
+			<a href="http://www.beian.miit.gov.cn/" target="_blank">
+				<img data-src="//img.alicdn.com/tfs/TB1..50QpXXXXX7XpXXXXXXXXXX-40-40.png" height="25px" src="//img.alicdn.com/tfs/TB1..50QpXXXXX7XpXXXXXXXXXX-40-40.png">
+				<span class="ali-report-link-text">粤ICP备20057669号</span>
+			</a>
+		</div>
+	</div>
 </html>
